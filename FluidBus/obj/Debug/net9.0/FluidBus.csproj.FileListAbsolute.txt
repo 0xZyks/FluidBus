@@ -1,0 +1,11 @@
+D:\source\repos\FluidBus\FluidBus\bin\Debug\net9.0\FluidBus.deps.json
+D:\source\repos\FluidBus\FluidBus\bin\Debug\net9.0\FluidBus.dll
+D:\source\repos\FluidBus\FluidBus\bin\Debug\net9.0\FluidBus.pdb
+D:\source\repos\FluidBus\FluidBus\obj\Debug\net9.0\FluidBus.GeneratedMSBuildEditorConfig.editorconfig
+D:\source\repos\FluidBus\FluidBus\obj\Debug\net9.0\FluidBus.AssemblyInfoInputs.cache
+D:\source\repos\FluidBus\FluidBus\obj\Debug\net9.0\FluidBus.AssemblyInfo.cs
+D:\source\repos\FluidBus\FluidBus\obj\Debug\net9.0\FluidBus.csproj.CoreCompileInputs.cache
+D:\source\repos\FluidBus\FluidBus\obj\Debug\net9.0\FluidBus.dll
+D:\source\repos\FluidBus\FluidBus\obj\Debug\net9.0\refint\FluidBus.dll
+D:\source\repos\FluidBus\FluidBus\obj\Debug\net9.0\FluidBus.pdb
+D:\source\repos\FluidBus\FluidBus\obj\Debug\net9.0\ref\FluidBus.dll
