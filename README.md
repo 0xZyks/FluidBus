@@ -31,7 +31,7 @@ It’s designed to be fast, flexible, and easy to extend — whether you’re bu
 Clone or include the source project directly into your solution:
 
 ```bash
-git clone https://github.com/<YourUser>/FluidBus.git
+git clone https://github.com/0xZyks/FluidBus.git
 
 Then add a reference to the FluidBus project in your application.
 🚀 Quick Start
