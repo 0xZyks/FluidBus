@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FluidBus")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eb8a444a0aa500d0b50a9d40af6c0f42ddde1f4d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5a26cc52812b01b25050ac78be465b71a0c8af5b")]
 [assembly: System.Reflection.AssemblyProductAttribute("FluidBus")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FluidBus")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
