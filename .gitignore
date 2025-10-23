@@ -1,0 +1,77 @@
+# === Build & compilation ===
+bin/
+obj/
+[Bb]uild/
+[Ll]ogs/
+[Bb]enchmarkDotNet.Artifacts/
+
+# === Visual Studio & VSCode ===
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# === .NET stuff ===
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.csproj.user
+*.vcxproj.user
+
+# === NuGet ===
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+*.nuget.props
+*.nuget.targets
+
+# === OS-specific ===
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# === Logs & temp files ===
+*.log
+*.tlog
+*.tmp
+*.bak
+*.old
+
+# === Rider / JetBrains ===
+.idea/
+*.iml
+out/
+
+# === Other dev tools ===
+*.swp
+*.swo
+*.orig
+
+# === Build output (cross-platform) ===
+/bin/
+/obj/
+/out/
+/publish/
+
+# === User secrets (si ASP.NET) ===
+secrets.json
+
+# === Misc ===
+*.dbmdl
+*.db
+*.sqlite
+*.mdb
+*.pdb
+
+# === Coverage & analysis ===
+coverage/
+*.coverage
+*.coveragexml
+TestResults/
+*.trx
+*.xml

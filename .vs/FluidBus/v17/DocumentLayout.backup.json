@@ -54,8 +54,12 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e78e0cf7-2e4e-48a7-bf7f-a94d9330a3be}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -79,8 +83,7 @@
               "RelativeToolTip": "FluidBus\\Handlers\\Core\\HandlerOpCode.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T01:37:06.906Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-23T01:37:06.906Z"
             },
             {
               "$type": "Document",
@@ -92,8 +95,7 @@
               "RelativeToolTip": "FluidBus\\Handlers\\Core\\HandlerLinq.cs",
               "ViewState": "AgIAAHAAAAAAAAAAAAAAAIsAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T01:36:24.875Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-23T01:36:24.875Z"
             },
             {
               "$type": "Document",
@@ -105,8 +107,7 @@
               "RelativeToolTip": "FluidBus\\Handlers\\BusLogHandler.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T01:36:15.545Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-23T01:36:15.545Z"
             },
             {
               "$type": "Document",
@@ -118,8 +119,7 @@
               "RelativeToolTip": "FluidBus\\Herits\\IFluidHandler.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T01:36:08.468Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-23T01:36:08.468Z"
             },
             {
               "$type": "Document",
@@ -131,8 +131,7 @@
               "RelativeToolTip": "FluidBus\\Herits\\IFluidEvent.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T01:36:04.724Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-23T01:36:04.724Z"
             },
             {
               "$type": "Document",
@@ -144,8 +143,7 @@
               "RelativeToolTip": "FluidBus\\Herits\\FluidHandler.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T01:35:42.078Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-23T01:35:42.078Z"
             },
             {
               "$type": "Document",
@@ -157,8 +155,7 @@
               "RelativeToolTip": "FluidBus\\Herits\\FluidEvent.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAAB8AAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T01:34:48.114Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-23T01:34:48.114Z"
             },
             {
               "$type": "Document",
@@ -170,8 +167,7 @@
               "RelativeToolTip": "FluidBus\\Mocks\\JunkHandler.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T01:34:37.633Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-23T01:34:37.633Z"
             },
             {
               "$type": "Document",
@@ -183,8 +179,7 @@
               "RelativeToolTip": "FluidBus\\Bus.cs",
               "ViewState": "AgIAABcAAAAAAAAAAAAQwEEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T01:34:09.527Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-23T01:34:09.527Z"
             },
             {
               "$type": "Document",
@@ -196,12 +191,7 @@
               "RelativeToolTip": "FluidBus\\Utils\\IdGenerator.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-23T01:31:30.113Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{e78e0cf7-2e4e-48a7-bf7f-a94d9330a3be}"
+              "WhenOpened": "2025-10-23T01:31:30.113Z"
             }
           ]
         }
