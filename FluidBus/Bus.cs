@@ -15,7 +15,10 @@ namespace FluidBus
 {
 	public class Bus
 	{
-		public static void	Init()
+
+		static Bus()
+			=> Init();
+		private static void	Init()
 		{
 			HandlerLinq.RegisterNewOpCode(0x01, new BusLogHandler(), typeof(BusLogEvent));
 			RegisterByHandler(new BusLogHandler());
