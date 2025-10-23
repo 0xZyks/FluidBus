@@ -32,6 +32,7 @@ Clone or include the source project directly into your solution:
 
 ```bash
 git clone https://github.com/0xZyks/FluidBus.git
+```
 
 Then add a reference to the FluidBus project in your application.
 🚀 Quick Start
@@ -45,7 +46,6 @@ This registers the internal BusLogEvent and its handler automatically.
 2️⃣ Create Your Own Event
 
 You define events by inheriting from FluidEvent:
-```
 ```csharp
 public class PlayerJoinEvent : FluidEvent
 {
