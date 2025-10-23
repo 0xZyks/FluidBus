@@ -31,7 +31,8 @@ It’s designed to be fast, flexible, and easy to extend — whether you’re bu
 Clone or include the source project directly into your solution:
 
 ```bash
-git clone https://github.com/<YourUser>/FluidBus.git
+git clone https://github.com/0xZyks/FluidBus.git
+```
 
 Then add a reference to the FluidBus project in your application.
 🚀 Quick Start
@@ -45,7 +46,7 @@ This registers the internal BusLogEvent and its handler automatically.
 2️⃣ Create Your Own Event
 
 You define events by inheriting from FluidEvent:
-
+```csharp
 public class PlayerJoinEvent : FluidEvent
 {
     public string PlayerName { get; }
@@ -56,11 +57,12 @@ public class PlayerJoinEvent : FluidEvent
         PlayerName = name;
     }
 }
-
+```
 3️⃣ Create a Matching Handler
 
 Every event needs a handler derived from FluidHandler<T>:
 
+```csharp
 public class PlayerJoinHandler : FluidHandler<PlayerJoinEvent>
 {
     public PlayerJoinHandler() 
@@ -72,11 +74,13 @@ public class PlayerJoinHandler : FluidHandler<PlayerJoinEvent>
         Console.WriteLine($"[JOIN] Player connected: {evt.PlayerName}");
     }
 }
+```
 
 4️⃣ Register the Handler
 
 Handlers are registered by associating them with an opcode and their event type:
 
+```csharp
 Bus.RegisterByOpCode(0x10); // Optional registration via opcode only
 
 HandlerLinq.RegisterNewOpCode(
@@ -86,13 +90,16 @@ HandlerLinq.RegisterNewOpCode(
 );
 
 Bus.RegisterByHandler(new PlayerJoinHandler());
+```
 
 5️⃣ Publish an Event
 
 Finally, trigger your event anywhere in your app:
 
+```csharp
 var joinEvent = new PlayerJoinEvent("Alice");
 Bus.Publish(joinEvent);
+```
 
 The bus will automatically:
 
@@ -103,15 +110,17 @@ The bus will automatically:
     Execute their Handle() methods
 
 Output:
-
+```bash
 [SYS] - Event Dispatched: $Fluid-EVT-XXXXXXX
 [JOIN] Player connected: Alice
 [SYS] - Handler Triggered: $Fluid-HDL-XXXXXXX
+```
 
 💡 Advanced Example
 
 Multiple handlers, dynamic events, and logging:
 
+```csharp
 // Another event
 public class ScoreUpdatedEvent : FluidEvent
 {
@@ -144,7 +153,8 @@ Bus.RegisterByHandler(new ScoreUpdatedHandler());
 
 // Trigger the event
 Bus.Publish(new ScoreUpdatedEvent("Alice", 42));
-
+```
+```bash
 🧠 Architecture Overview
 
 +----------------+
@@ -166,6 +176,7 @@ Bus.Publish(new ScoreUpdatedEvent("Alice", 42));
 |   FluidEvent   |  --> Base for all events, handles dispatch & logs
 |   FluidHandler |  --> Generic handler implementation
 +----------------+
+```
 
 🔮 Roadmap
 
@@ -181,7 +192,7 @@ Publish NuGet package
 
 🧑‍💻 Author
 
-FluidBus — developed by [Your Name]
+FluidBus — developed by Zyks/ZKS
 🕒 Initial version built in ~10 hours over 2 days
 💬 “A fluid event system for developers who like clean architecture.”
 📜 License
