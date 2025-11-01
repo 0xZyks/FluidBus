@@ -19,10 +19,7 @@ namespace FluidBus
 		static Bus()
 			=> Init();
 		private static void	Init()
-		{
-			HandlerLinq.RegisterNewOpCode(0x01, new BusLogHandler(), typeof(BusLogEvent));
-			RegisterByHandler(new BusLogHandler());
-		}
+			=> HandlerLinq.RegisterNewOpCode(0x01, new BusLogHandler(), typeof(BusLogEvent));
 
 		public static void	RegisterByHandler<T>(FluidHandler<T> handler)
 			=> HandlerLinq.Register(handler);
@@ -61,7 +58,14 @@ namespace FluidBus
 
 		public static bool	Publish<T>(T evt)
 		{
+			if (TryGetHandlersByEvent((IFluidEvent)evt!, out IFluidHandler? handler))
+				RegisterByHandler((FluidHandler<T>)handler!);
+			else
+				return (false);
+
 			((dynamic)evt!).Dispatch();
+
+			DropByHandler(handler!);
 			return (true);
 		}
 	}
