@@ -63,7 +63,6 @@ namespace FluidBus
 			else
 				return (false);
 			((dynamic)evt!).Dispatch();
-			//DropByHandler(handler!);
 
 			return (true);
 		}
