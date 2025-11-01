@@ -3,16 +3,32 @@
   "WorkspaceRootPath": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|d:\\dev 2\\fluid\\fluidbus\\fluidbus\\fluidbus\\handlers\\nativhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|solutionrelative:fluidbus\\handlers\\nativhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|d:\\dev 2\\fluid\\fluidbus\\fluidbus\\fluidbus\\core\\fluidinstruction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|solutionrelative:fluidbus\\core\\fluidinstruction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|d:\\dev 2\\fluid\\fluidbus\\fluidbus\\fluidbus\\events\\nativevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|solutionrelative:fluidbus\\events\\nativevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|d:\\dev 2\\fluid\\fluidbus\\fluidbus\\fluidbus\\fluidbus.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|solutionrelative:fluidbus\\fluidbus.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|d:\\dev 2\\fluid\\fluidbus\\fluidbus\\fluidbus\\bus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|solutionrelative:fluidbus\\bus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|d:\\dev 2\\fluid\\fluidbus\\fluidbus\\fluidbus\\herits\\fluidevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|solutionrelative:fluidbus\\herits\\fluidevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|d:\\dev 2\\fluid\\fluidbus\\fluidbus\\fluidbus\\handlers\\core\\handlerlinq.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|solutionrelative:fluidbus\\handlers\\core\\handlerlinq.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|d:\\dev 2\\fluid\\fluidbus\\fluidbus\\fluidbus\\herits\\fluidevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|solutionrelative:fluidbus\\herits\\fluidevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{982C4D74-31B5-4A84-8CFD-66878EEE6FBD}|FluidBus\\FluidBus.csproj|d:\\dev 2\\fluid\\fluidbus\\fluidbus\\fluidbus\\herits\\fluidhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -54,15 +70,67 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 10,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "NativHandler.cs",
+              "DocumentMoniker": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Handlers\\NativHandler.cs",
+              "RelativeDocumentMoniker": "FluidBus\\Handlers\\NativHandler.cs",
+              "ToolTip": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Handlers\\NativHandler.cs",
+              "RelativeToolTip": "FluidBus\\Handlers\\NativHandler.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAiwBoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-01T09:42:48.178Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FluidInstruction.cs",
+              "DocumentMoniker": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Core\\FluidInstruction.cs",
+              "RelativeDocumentMoniker": "FluidBus\\Core\\FluidInstruction.cs",
+              "ToolTip": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Core\\FluidInstruction.cs",
+              "RelativeToolTip": "FluidBus\\Core\\FluidInstruction.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwCAAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-01T09:29:27.895Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "FluidBus",
+              "DocumentMoniker": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\FluidBus.csproj",
+              "RelativeDocumentMoniker": "FluidBus\\FluidBus.csproj",
+              "ToolTip": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\FluidBus.csproj",
+              "RelativeToolTip": "FluidBus\\FluidBus.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-11-01T09:15:56.799Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{e78e0cf7-2e4e-48a7-bf7f-a94d9330a3be}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
+              "Title": "NativEvent.cs",
+              "DocumentMoniker": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Events\\NativEvent.cs",
+              "RelativeDocumentMoniker": "FluidBus\\Events\\NativEvent.cs",
+              "ToolTip": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Events\\NativEvent.cs",
+              "RelativeToolTip": "FluidBus\\Events\\NativEvent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-01T09:11:57.412Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "BusLogEvent.cs",
               "DocumentMoniker": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Events\\BusLogEvent.cs",
               "RelativeDocumentMoniker": "FluidBus\\Events\\BusLogEvent.cs",
@@ -74,7 +142,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 10,
               "Title": "HandlerOpCode.cs",
               "DocumentMoniker": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Handlers\\Core\\HandlerOpCode.cs",
               "RelativeDocumentMoniker": "FluidBus\\Handlers\\Core\\HandlerOpCode.cs",
@@ -86,20 +154,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "HandlerLinq.cs",
               "DocumentMoniker": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Handlers\\Core\\HandlerLinq.cs",
               "RelativeDocumentMoniker": "FluidBus\\Handlers\\Core\\HandlerLinq.cs",
               "ToolTip": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Handlers\\Core\\HandlerLinq.cs",
               "RelativeToolTip": "FluidBus\\Handlers\\Core\\HandlerLinq.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIsAAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAABcAAAAAAAAAAAAMwCoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-23T01:36:24.875Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 8,
               "Title": "BusLogHandler.cs",
               "DocumentMoniker": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Handlers\\BusLogHandler.cs",
               "RelativeDocumentMoniker": "FluidBus\\Handlers\\BusLogHandler.cs",
@@ -111,7 +179,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 11,
               "Title": "IFluidHandler.cs",
               "DocumentMoniker": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Herits\\IFluidHandler.cs",
               "RelativeDocumentMoniker": "FluidBus\\Herits\\IFluidHandler.cs",
@@ -123,7 +191,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 12,
               "Title": "IFluidEvent.cs",
               "DocumentMoniker": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Herits\\IFluidEvent.cs",
               "RelativeDocumentMoniker": "FluidBus\\Herits\\IFluidEvent.cs",
@@ -135,7 +203,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 7,
               "Title": "FluidHandler.cs",
               "DocumentMoniker": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Herits\\FluidHandler.cs",
               "RelativeDocumentMoniker": "FluidBus\\Herits\\FluidHandler.cs",
@@ -148,7 +216,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 6,
               "Title": "FluidEvent.cs",
               "DocumentMoniker": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Herits\\FluidEvent.cs",
               "RelativeDocumentMoniker": "FluidBus\\Herits\\FluidEvent.cs",
@@ -161,7 +229,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 13,
               "Title": "JunkHandler.cs",
               "DocumentMoniker": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Mocks\\JunkHandler.cs",
               "RelativeDocumentMoniker": "FluidBus\\Mocks\\JunkHandler.cs",
@@ -173,20 +241,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "Bus.cs",
               "DocumentMoniker": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Bus.cs",
               "RelativeDocumentMoniker": "FluidBus\\Bus.cs",
               "ToolTip": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Bus.cs",
               "RelativeToolTip": "FluidBus\\Bus.cs",
-              "ViewState": "AgIAACgAAAAAAAAAAAAYwD4AAAAHAAAAAAAAAA==",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAlwEAAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-23T01:34:09.527Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 14,
               "Title": "IdGenerator.cs",
               "DocumentMoniker": "D:\\Dev 2\\Fluid\\FluidBus\\FluidBus\\FluidBus\\Utils\\IdGenerator.cs",
               "RelativeDocumentMoniker": "FluidBus\\Utils\\IdGenerator.cs",
