@@ -1,12 +1,12 @@
-﻿using FluidBus.BluePrint;
-using FluidBus.Core;
-using FluidBus;
-using FluidBus.Core.BusProtocols;
+﻿using FluidBus;
 using FluidBus.Core.Herits;
-using FluidBus.Core.Instructions;
-using FluidBus.Core.Instructions.System;
+using FluidBus.BluePrint;
+using FluidBus.Core;
+using FluidBus.Core.BusProtocols;
+using FluidBus.Core.Instructions.Core;
 using FluidBus.Event;
-using System.Xml.Linq;
+using FluidBus.Handler;
+using System.Text;
 
 namespace LoggerTestBusCSharpPython
 {
@@ -14,21 +14,29 @@ namespace LoggerTestBusCSharpPython
 	{
 		static void Main(string[] args)
 		{
-			var (busEvt, success) = BluePrintFactory
-				.NewEvent(
-					typeof(TestEvt),
-					"test",
-					BusProtocol.System,
-					[new LogInstruction("CoucouFeur", msg => Console.WriteLine(msg)),
-					new LogInstruction("Hehe", msg => Console.WriteLine(msg))]
-				);
+            FBus.Register(new CoreHandler("core"));
 
-			FBus.Register(new TestHdl("Bite"));
-			FBus.Publish(busEvt);
+            var instr = new RustInstruction(
+                    new byte[][] { Encoding.UTF8.GetBytes("Hello From Fluid Guard") },
+                    (data) => FluidCoreAPI.Send(data)
+            );
+
+            instr.OnResult += (result) => {
+                if (result is byte[] bytes)
+                    Console.WriteLine($"C# Received: {Encoding.UTF8.GetString(bytes)}");
+            };
+
+            var evt = new CoreEvent(
+                    "core_evt",
+                    BusProtocol.System,
+                    [instr]
+            );
+
+            FBus.Publish(evt);
 		}
-
 	}
 
+/*
 	public class TestEvt : FluidEvent
 	{
 		public TestEvt(string name, BusProtocol protocol, params IFluidInstruction[] instrs) : base($"[EVT::{nameof(TestEvt)}::{name}]", protocol, instrs)
@@ -50,4 +58,5 @@ namespace LoggerTestBusCSharpPython
 			return true;
 		}
 	}
+*/
 }

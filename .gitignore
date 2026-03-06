@@ -30,3 +30,7 @@ Thumbs.db
 # Test results
 TestResults/
 coverage/
+
+# Rust
+target/
+Cargo.lock
