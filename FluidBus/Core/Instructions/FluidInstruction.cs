@@ -31,13 +31,13 @@ namespace FluidBus.Core.Instructions
             _funcs = funcs;
         }
 
-        public void Execute()
+        public virtual void Execute()
         {
             foreach (var method in _methods ?? [])
                 method?.Invoke(Data!);
         }
 
-        public object? ExecuteAndGet()
+        public virtual object? ExecuteAndGet()
         {
             object? result = null;
             foreach (var func in _funcs ?? [])

@@ -17,7 +17,7 @@ namespace LoggerTestBusCSharpPython
             FBus.Register(new CoreHandler("core"));
 
             var instr = new RustInstruction(
-                    new byte[][] { Encoding.UTF8.GetBytes("Hello From Fluid Guard") },
+                    0x01,
                     (data) => FluidCoreAPI.Send(data)
             );
 
@@ -33,7 +33,21 @@ namespace LoggerTestBusCSharpPython
             );
 
             FBus.Publish(evt);
+
+            Test();
 		}
+
+        static void Test()
+        {
+            byte[] token = FluidCoreAPI.RequestToken(0x01);
+            Console.WriteLine($"Token v1: {string.Join(", ", token)}");
+
+            token = FluidCoreAPI.Rotate(token);
+            Console.WriteLine($"Token v2: {string.Join(", ", token)}");
+
+            token = FluidCoreAPI.Rotate(token);
+            Console.WriteLine($"Token v3: {string.Join(", ", token)}");
+        }
 	}
 
 /*

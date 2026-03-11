@@ -15,6 +15,7 @@ namespace FluidBus.Core
 		private static HashSet<BusPort> _ports;
 		static FBus()
 		{
+            FluidCoreAPI.Initialize();
 			_ports = new();
 			HandlerLinq.Register(new BusLogHandler("bus_logger"));
 			_ports.Add(new BusPort(BusProtocol.System));
