@@ -1,100 +1,129 @@
 mod core;
 
-use core::seed::generate_seed;
-use core::token::{generate_token, next_token};
-use core::bytecode::{generate_bytecode};
-use std::{slice};
-use std::sync::atomic::{AtomicU64, Ordering};
+use core::bytecode::generate_bytecode;
+use core::ffi::{free_vec, vec_into_raw};
+use core::state;
 
-
-static SEED: AtomicU64 = AtomicU64::new(0);
-
-#[unsafe(no_mangle)]
-pub extern "C" fn process_bytes(data: *const u8, len: usize, out_len: *mut usize) -> *mut u8 {
-    unsafe {
-        let input = slice::from_raw_parts(data, len);
-        println!("Rust Received {:?}", input);
-    };
-
-    let mut bytes: Vec<u8> = "Received OpCode, sending Token".as_bytes().to_vec();
-    unsafe { *out_len = bytes.len(); };
-    let ptr = bytes.as_mut_ptr();
-    std::mem::forget(bytes);
-    ptr
-}
-
-#[unsafe(no_mangle)]
-pub extern "C" fn free_bytes(ptr: *mut u8, len: usize) {
-    unsafe {
-        let _ = Vec::from_raw_parts(ptr, len, len);
-    }
-    println!("Freed !");
-}
+// --- FFI Exports ---
 
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn init() -> u64 {
-    let seed = generate_seed();
-    SEED.store(seed, Ordering::SeqCst);
-    seed
+    state::init()
 }
 
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn get_parsed_bytecode_by_token(
+    token: *const u8,
+    token_len: usize,
+    arg: *const u8,
+    arg_len: usize,
+    out_len: *mut usize,
+) -> *mut u8 {
+    let token_slice = unsafe { std::slice::from_raw_parts(token, token_len) };
+    let arg_slice = unsafe { raw_to_slice(arg, arg_len) };
+
+    match state::resolve_by_token(token_slice, arg_slice) {
+        Some(result) => unsafe { vec_into_raw(result, out_len) },
+        None => std::ptr::null_mut(),
+    }
+}
+
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn get_parsed_bytecode(
+    opcode: u8,
+    arg: *const u8,
+    arg_len: usize,
+    out_len: *mut usize,
+) -> *mut u8 {
+    let arg_slice = unsafe { raw_to_slice(arg, arg_len) };
+
+    match state::resolve_by_opcode(opcode, arg_slice) {
+        Some(result) => unsafe { vec_into_raw(result, out_len) },
+        None => std::ptr::null_mut(),
+    }
+}
+
+/// Legacy debug : echo les bytes recus. Ne passe pas par le state.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn process_bytes(
+    data: *const u8,
+    len: usize,
+    out_len: *mut usize,
+) -> *mut u8 {
+    unsafe {
+        let input = std::slice::from_raw_parts(data, len);
+        println!("Rust Received {:?}", input);
+    }
+    let bytes = "Received OpCode, sending Token".as_bytes().to_vec();
+    unsafe { vec_into_raw(bytes, out_len) }
+}
+
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn free_bytes(ptr: *mut u8, len: usize) {
+    unsafe { free_vec(ptr, len) }
+}
+
+/// Retourne le token courant pour un opcode depuis le state.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn get_token(opcode: u8, out_len: *mut usize) -> *mut u8 {
-    let seed = SEED.load(Ordering::SeqCst);
-    let mut token = generate_token(opcode, seed);
-    unsafe {
-        *out_len = token.len();
-        let ptr = token.as_mut_ptr();
-        std::mem::forget(token);
-        ptr
+    match state::current_token(opcode) {
+        Some(token) => unsafe { vec_into_raw(token, out_len) },
+        None => std::ptr::null_mut(),
     }
 }
 
+/// Rotate le token dans le state (met a jour TOKENS, BYTECODES, TOKEN_INDEX).
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn rotate_token(data: *const u8, len: usize, out_len: *mut usize) -> *mut u8 {
-    let seed = SEED.load(Ordering::SeqCst);
+pub unsafe extern "C" fn rotate_token(
+    data: *const u8,
+    len: usize,
+    out_len: *mut usize,
+) -> *mut u8 {
     let current = unsafe { std::slice::from_raw_parts(data, len) };
-    let mut next = next_token(current, seed);
-    unsafe {
-        *out_len = next.len();
-        let ptr = next.as_mut_ptr();
-        std::mem::forget(next);
-        ptr
+    match state::rotate(current) {
+        Some(next) => unsafe { vec_into_raw(next, out_len) },
+        None => std::ptr::null_mut(),
     }
 }
 
+/// Legacy test : genere un bytecode brut sans passer par le state.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn get_bytecode(
     opcode: u8,
-    type_name: *const u8, type_name_len: usize,
-    method_name: *const u8, method_name_len: usize,
-    arg_type: *const u8, arg_type_len: usize, arg: *const u8, arg_len: usize,
-    out_len: *mut usize) -> *mut u8 {
-    let seed = SEED.load(Ordering::SeqCst);
-
-    let type_name = unsafe { std::str::from_utf8(std::slice::from_raw_parts(type_name, type_name_len)).unwrap() };
-    let method_name = unsafe { std::str::from_utf8(std::slice::from_raw_parts(method_name, method_name_len)).unwrap() };
-    let arg_type = unsafe { std::str::from_utf8(std::slice::from_raw_parts(arg_type, arg_type_len)).unwrap() };
+    type_name: *const u8,
+    type_name_len: usize,
+    method_name: *const u8,
+    method_name_len: usize,
+    arg_type: *const u8,
+    arg_type_len: usize,
+    arg: *const u8,
+    arg_len: usize,
+    out_len: *mut usize,
+) -> *mut u8 {
+    let seed = state::get_seed();
+    let type_name = unsafe {
+        std::str::from_utf8(std::slice::from_raw_parts(type_name, type_name_len)).unwrap()
+    };
+    let method_name = unsafe {
+        std::str::from_utf8(std::slice::from_raw_parts(method_name, method_name_len)).unwrap()
+    };
+    let arg_type = unsafe {
+        std::str::from_utf8(std::slice::from_raw_parts(arg_type, arg_type_len)).unwrap()
+    };
     let arg = unsafe { std::slice::from_raw_parts(arg, arg_len) };
 
-    let mut bytecode = generate_bytecode(seed, opcode, type_name, method_name, arg_type, arg);
-
-    unsafe { *out_len = bytecode.len() };
-    let ptr = bytecode.as_mut_ptr();
-    std::mem::forget(bytecode);
-    ptr
-}
-/*
-fn bytes_to_str(data: *const u8, len: usize) -> &'static str {
-    let input = unsafe { slice::from_raw_parts(data, len) };
-    std::str::from_utf8(input).unwrap()
+    let bytecode = generate_bytecode(seed, opcode, type_name, method_name, arg_type, arg);
+    unsafe { vec_into_raw(bytecode, out_len) }
 }
 
-fn str_to_ptr(s: &str, out_len: *mut usize) -> *mut u8 {
-    let mut bytes: Vec<u8> = s.as_bytes().to_vec();
-    unsafe { *out_len = bytes.len() };
-    let ptr = bytes.as_mut_ptr();
-    std::mem::forget(bytes);
-    ptr
+// --- Helpers ---
+
+/// # Safety
+/// `ptr` must be valid for `len` bytes when `len > 0`.
+unsafe fn raw_to_slice<'a>(ptr: *const u8, len: usize) -> &'a [u8] {
+    if len > 0 {
+        unsafe { std::slice::from_raw_parts(ptr, len) }
+    } else {
+        &[]
+    }
 }
-*/
