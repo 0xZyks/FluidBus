@@ -2,6 +2,7 @@ mod core;
 
 use core::seed::generate_seed;
 use core::token::{generate_token, next_token};
+use core::bytecode::{generate_bytecode};
 use std::{slice};
 use std::sync::atomic::{AtomicU64, Ordering};
 
@@ -60,6 +61,28 @@ pub unsafe extern "C" fn rotate_token(data: *const u8, len: usize, out_len: *mut
         std::mem::forget(next);
         ptr
     }
+}
+
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn get_bytecode(
+    opcode: u8,
+    type_name: *const u8, type_name_len: usize,
+    method_name: *const u8, method_name_len: usize,
+    arg_type: *const u8, arg_type_len: usize, arg: *const u8, arg_len: usize,
+    out_len: *mut usize) -> *mut u8 {
+    let seed = SEED.load(Ordering::SeqCst);
+
+    let type_name = unsafe { std::str::from_utf8(std::slice::from_raw_parts(type_name, type_name_len)).unwrap() };
+    let method_name = unsafe { std::str::from_utf8(std::slice::from_raw_parts(method_name, method_name_len)).unwrap() };
+    let arg_type = unsafe { std::str::from_utf8(std::slice::from_raw_parts(arg_type, arg_type_len)).unwrap() };
+    let arg = unsafe { std::slice::from_raw_parts(arg, arg_len) };
+
+    let mut bytecode = generate_bytecode(seed, opcode, type_name, method_name, arg_type, arg);
+
+    unsafe { *out_len = bytecode.len() };
+    let ptr = bytecode.as_mut_ptr();
+    std::mem::forget(bytecode);
+    ptr
 }
 /*
 fn bytes_to_str(data: *const u8, len: usize) -> &'static str {

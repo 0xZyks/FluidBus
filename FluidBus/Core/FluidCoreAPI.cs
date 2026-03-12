@@ -1,6 +1,7 @@
 using FluidBus.Core.Herits;
 using FluidBus.Core.Instructions;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace FluidBus.Core
 {
@@ -20,6 +21,16 @@ namespace FluidBus.Core
 
         [DllImport("libfluid_core", EntryPoint="rotate_token")]
         private static extern IntPtr RotateToken(byte[] data, nuint len, out nuint outLen);
+
+        [DllImport("libfluid_core", EntryPoint = "get_bytecode")]
+        private static extern IntPtr GetBytecode(
+                byte opcode,
+                byte[] typeName, nuint typeNameLen,
+                byte[] methodName, nuint methodNameLen,
+                byte[] argType, nuint argTypeLen,
+                byte[] arg, nuint argLen,
+                out nuint outLen
+                );
 
         public static byte[] Send(byte[] data)
         {
@@ -62,6 +73,27 @@ namespace FluidBus.Core
         public static object? Execute(byte[] bytecode)
         {
             return null!;
+        }
+
+        public static byte[] GetBytecode(byte opcode, string typeName, string methodName, string argType, byte[] arg)
+        {
+            byte[] typeBytes = Encoding.UTF8.GetBytes(typeName);
+            byte[] methodBytes = Encoding.UTF8.GetBytes(methodName);
+            byte[] argTypeBytes = Encoding.UTF8.GetBytes(argType);
+
+            IntPtr ptr = GetBytecode(
+                    opcode,
+                    typeBytes, (nuint)typeBytes.Length,
+                    methodBytes, (nuint)methodBytes.Length,
+                    argTypeBytes, (nuint)argTypeBytes.Length,
+                    arg, (nuint)arg.Length,
+                    out nuint outLen
+                    );
+
+            byte[] result = new byte[outLen];
+            Marshal.Copy(ptr, result, 0, (int)outLen);
+            FreeBytes(ptr, outLen);
+            return result;
         }
     }
 }

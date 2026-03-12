@@ -34,6 +34,17 @@ namespace LoggerTestBusCSharpPython
 
             FBus.Publish(evt);
 
+            byte[] bytecode = FluidCoreAPI.GetBytecode(
+                    0x04,
+                    "Console",
+                    "WriteLine",
+                    "string",
+                    Encoding.UTF8.GetBytes("Fluid.Guard")
+                    );
+
+            Console.WriteLine($"Bytecode: {string.Join(", ", bytecode)}");
+            Console.WriteLine($"Len: {bytecode.Length}");
+
             Test();
 		}
 
