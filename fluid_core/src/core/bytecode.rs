@@ -71,7 +71,7 @@ pub fn generate_bytecode(
     type_name: &str,
     method_name: &str,
     arg_type: &str,
-    arg: &[u8],
+    args: &[&[u8]],
 ) -> Vec<u8> {
     // Construire les 4 sections
     let section_opcode = make_section(seed, SECTION_OPCODE, &[opcode]);
@@ -81,8 +81,11 @@ pub fn generate_bytecode(
     let mut args_data = Vec::new();
     args_data.push(arg_type.len() as u8);
     args_data.extend_from_slice(arg_type.as_bytes());
-    args_data.push(arg.len() as u8);
-    args_data.extend_from_slice(arg);
+    args_data.push(args.len() as u8); // nb_args
+    for arg in args {
+        args_data.push(arg.len() as u8);
+        args_data.extend_from_slice(arg);
+    }
     let section_args = make_section(seed, SECTION_ARGS, &args_data);
 
     // Ordre aleatoire des sections via seed
@@ -140,7 +143,7 @@ pub struct ParsedBytecode {
     pub type_name: String,
     pub method_name: String,
     pub arg_type: String,
-    pub arg: Vec<u8>,
+    pub args: Vec<Vec<u8>>,
 }
 
 pub fn parse_bytecode(data: &[u8], seed: u64) -> Option<ParsedBytecode> {
@@ -148,7 +151,7 @@ pub fn parse_bytecode(data: &[u8], seed: u64) -> Option<ParsedBytecode> {
     let mut type_name: Option<String> = None;
     let mut method_name: Option<String> = None;
     let mut arg_type: Option<String> = None;
-    let mut arg: Option<Vec<u8>> = None;
+    let mut arg: Option<Vec<Vec<u8>>> = None;
 
     let mut i = 0usize;
 
@@ -193,13 +196,23 @@ pub fn parse_bytecode(data: &[u8], seed: u64) -> Option<ParsedBytecode> {
                             return None;
                         }
                         let at = String::from_utf8_lossy(&payload[1..1 + at_len]).to_string();
-                        let a_len = payload[1 + at_len] as usize;
-                        if 1 + at_len + 1 + a_len > payload.len() {
-                            return None;
+
+                        let mut cursor = 1 + at_len;
+                        let nb_args = payload[cursor] as usize;
+                        cursor += 1;
+
+                        let mut parsed_args: Vec<Vec<u8>> = Vec::new();
+                        for _ in 0..nb_args {
+                            if cursor >= payload.len() { return None; }
+                            let a_len = payload[cursor] as usize;
+                            cursor += 1;
+                            if cursor + a_len > payload.len() { return None; }
+                            parsed_args.push(payload[cursor..cursor + a_len].to_vec());
+                            cursor += a_len;
                         }
-                        let a = payload[1 + at_len + 1..1 + at_len + 1 + a_len].to_vec();
+
                         arg_type = Some(at);
-                        arg = Some(a);
+                        arg = Some(parsed_args);
                     }
                     _ => {}
                 }
@@ -220,6 +233,6 @@ pub fn parse_bytecode(data: &[u8], seed: u64) -> Option<ParsedBytecode> {
         type_name: type_name?,
         method_name: method_name?,
         arg_type: arg_type?,
-        arg: arg?,
+        args: arg?,
     })
 }

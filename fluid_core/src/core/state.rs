@@ -7,32 +7,25 @@ use super::seed::generate_seed;
 use super::token::{generate_token, next_token};
 use super::xor::xor_bytes;
 
+use crate::generated::methods::{METHODS, SEED_BUILD};
+
 // --- Global state ---
 
-static SEED: AtomicU64 = AtomicU64::new(0);
+static SEED_RUNTIME: AtomicU64 = AtomicU64::new(0);
 static TOKENS: Mutex<Option<HashMap<u8, Vec<u8>>>> = Mutex::new(None);
 static BYTECODES: Mutex<Option<HashMap<u8, Vec<u8>>>> = Mutex::new(None);
 // HashMap inversee : token -> opcode
 static TOKEN_INDEX: Mutex<Option<HashMap<Vec<u8>, u8>>> = Mutex::new(None);
 
-// --- Constants ---
-
-const METHODS: &[(u8, &str, &str, &str)] = &[
-    (0x01, "Console", "ReadLine", "void"),
-    (0x02, "Console", "Write", "String"),
-    (0x03, "Console", "Read", "void"),
-    (0x04, "Console", "WriteLine", "String"),
-];
-
 // --- Public API ---
 
-pub fn get_seed() -> u64 {
-    SEED.load(Ordering::SeqCst)
+pub fn get_seed_runtime() -> u64 {
+    SEED_RUNTIME.load(Ordering::SeqCst)
 }
 
 pub fn init() -> u64 {
-    let seed = generate_seed();
-    SEED.store(seed, Ordering::SeqCst);
+    let seed_runtime = generate_seed();
+    SEED_RUNTIME.store(seed_runtime, Ordering::SeqCst);
 
     let mut tokens = TOKENS.lock().unwrap();
     let mut bytecodes = BYTECODES.lock().unwrap();
@@ -43,8 +36,8 @@ pub fn init() -> u64 {
     let mut index_map: HashMap<Vec<u8>, u8> = HashMap::new();
 
     for &(opcode, type_name, method_name, arg_type) in METHODS {
-        let token_v1 = generate_token(opcode, seed);
-        let bytecode_clear = generate_bytecode(seed, opcode, type_name, method_name, arg_type, &[]);
+        let token_v1 = generate_token(opcode, seed_runtime);
+        let bytecode_clear = generate_bytecode(SEED_BUILD, opcode, type_name, method_name, arg_type, &[]);
         let bytecode_xor = xor_bytes(&bytecode_clear, &token_v1);
 
         index_map.insert(token_v1.clone(), opcode);
@@ -56,13 +49,13 @@ pub fn init() -> u64 {
     *bytecodes = Some(bytecode_map);
     *token_index = Some(index_map);
 
-    seed
+    seed_runtime
 }
 
 /// Resolve un opcode depuis un token, dechiffre/parse le bytecode,
 /// injecte l'arg, rotate le token, et retourne le resultat serialise.
-pub fn resolve_by_token(token_slice: &[u8], arg: &[u8]) -> Option<Vec<u8>> {
-    let seed = get_seed();
+pub fn resolve_by_token(token_slice: &[u8], args: &[&[u8]]) -> Option<Vec<u8>> {
+    let seed_runtime = get_seed_runtime();
 
     let mut tokens = TOKENS.lock().ok()?;
     let mut bytecodes = BYTECODES.lock().ok()?;
@@ -74,7 +67,7 @@ pub fn resolve_by_token(token_slice: &[u8], arg: &[u8]) -> Option<Vec<u8>> {
 
     let opcode = *index_map.get(token_slice)?;
 
-    let (parsed, next) = decrypt_parse_rotate(opcode, token_map, bytecode_map, arg, seed)?;
+    let (parsed, next) = decrypt_parse_rotate(opcode, token_map, bytecode_map, args, seed_runtime)?;
 
     // Mettre a jour le token index
     index_map.remove(token_slice);
@@ -84,8 +77,8 @@ pub fn resolve_by_token(token_slice: &[u8], arg: &[u8]) -> Option<Vec<u8>> {
 }
 
 /// Meme logique que `resolve_by_token` mais avec un opcode direct.
-pub fn resolve_by_opcode(opcode: u8, arg: &[u8]) -> Option<Vec<u8>> {
-    let seed = get_seed();
+pub fn resolve_by_opcode(opcode: u8, args: &[&[u8]]) -> Option<Vec<u8>> {
+    let seed_runtime = get_seed_runtime();
 
     let mut tokens = TOKENS.lock().ok()?;
     let mut bytecodes = BYTECODES.lock().ok()?;
@@ -93,7 +86,7 @@ pub fn resolve_by_opcode(opcode: u8, arg: &[u8]) -> Option<Vec<u8>> {
     let token_map = tokens.as_mut()?;
     let bytecode_map = bytecodes.as_mut()?;
 
-    let (parsed, next) = decrypt_parse_rotate(opcode, token_map, bytecode_map, arg, seed)?;
+    let (parsed, next) = decrypt_parse_rotate(opcode, token_map, bytecode_map, args, seed_runtime)?;
 
     Some(serialize_result(&parsed, &next))
 }
@@ -107,7 +100,7 @@ pub fn current_token(opcode: u8) -> Option<Vec<u8>> {
 /// Rotate le token associe a `current` dans le state.
 /// Met a jour TOKENS, BYTECODES et TOKEN_INDEX de facon coherente.
 pub fn rotate(current: &[u8]) -> Option<Vec<u8>> {
-    let seed = get_seed();
+    let seed_runtime = get_seed_runtime();
 
     let mut tokens = TOKENS.lock().ok()?;
     let mut bytecodes = BYTECODES.lock().ok()?;
@@ -123,8 +116,8 @@ pub fn rotate(current: &[u8]) -> Option<Vec<u8>> {
     // Dechiffrer avec le token courant
     let bytecode_clear = xor_bytes(&bytecode_xor, current);
 
-    // Generer le prochain token
-    let next = next_token(current, seed);
+    // Generer le prochain token (runtime seed)
+    let next = next_token(current, seed_runtime);
 
     // Re-chiffrer avec le nouveau token
     let bytecode_new = xor_bytes(&bytecode_clear, &next);
@@ -146,20 +139,20 @@ fn decrypt_parse_rotate(
     opcode: u8,
     token_map: &mut HashMap<u8, Vec<u8>>,
     bytecode_map: &mut HashMap<u8, Vec<u8>>,
-    arg: &[u8],
-    seed: u64,
+    args: &[&[u8]],
+    seed_runtime: u64,
 ) -> Option<(ParsedBytecode, Vec<u8>)> {
     let token = token_map.get(&opcode)?.clone();
     let bytecode_xor = bytecode_map.get(&opcode)?.clone();
 
     let bytecode_clear = xor_bytes(&bytecode_xor, &token);
-    let mut parsed = parse_bytecode(&bytecode_clear, seed)?;
+    let mut parsed = parse_bytecode(&bytecode_clear, SEED_BUILD)?;
 
-    if !arg.is_empty() {
-        parsed.arg = arg.to_vec();
+    if !args.is_empty() {
+        parsed.args = args.iter().map(|a| a.to_vec()).collect();
     }
 
-    let next = next_token(&token, seed);
+    let next = next_token(&token, seed_runtime);
     let bytecode_new = xor_bytes(&bytecode_clear, &next);
 
     token_map.insert(opcode, next.clone());
@@ -177,7 +170,10 @@ fn serialize_result(parsed: &ParsedBytecode, next_token: &[u8]) -> Vec<u8> {
     push_prefixed(&mut buf, parsed.type_name.as_bytes());
     push_prefixed(&mut buf, parsed.method_name.as_bytes());
     push_prefixed(&mut buf, parsed.arg_type.as_bytes());
-    push_prefixed(&mut buf, &parsed.arg);
+    buf.push(parsed.args.len() as u8); // nb_args
+    for arg in &parsed.args {
+        push_prefixed(&mut buf, arg);
+    }
     buf
 }
 

@@ -9,6 +9,12 @@ using System.Text;
 
 namespace LoggerTestBusCSharpPython
 {
+    public static class UserMethod
+    {
+        public static int Add(int a, int b)
+            => a + b;
+    }
+
     internal class Program
     {
         static void Main(string[] args)
@@ -18,13 +24,13 @@ namespace LoggerTestBusCSharpPython
             FBus.Register(new CoreHandler("core"));
 
             // Token initial pour opcode 0x04
-            byte[] token = FluidCoreAPI.RequestToken(0x04);
+            byte[] token = FluidCoreAPI.RequestToken(0x05);
             Console.WriteLine($"Token initial : {string.Join(", ", token)}");
 
             // Premier appel
             var instr = new RustInstruction(
                 token,
-                Encoding.UTF8.GetBytes("Fluid.Guard")
+                [BitConverter.GetBytes(1), BitConverter.GetBytes(2)]
             );
 
             instr.OnResult += (result) => {
@@ -47,9 +53,10 @@ namespace LoggerTestBusCSharpPython
             Console.WriteLine();
 
             // Deuxieme appel avec token mis a jour depuis instr.Data
+            byte[] token2 = FluidCoreAPI.RequestToken(0x04);
             var instr2 = new RustInstruction(
-                instr.Data!,
-                Encoding.UTF8.GetBytes("Hello from MiniVM !")
+                token2,
+                [Encoding.UTF8.GetBytes("Hello from MiniVM !")]
             );
 
             instr2.OnResult += (result) => {

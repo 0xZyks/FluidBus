@@ -7,16 +7,15 @@ namespace FluidBus.Core.Instructions.Core
         private byte[] _token;
         private readonly bool _isVmFlow;
 
-        // Nouveau constructeur — token + arg, FluidVM dans la func
-        public RustInstruction(byte[] token, byte[]? arg = null)
-            : base(token, (data) => (object?)FluidVM.Run(data, arg))
+        public RustInstruction(byte[] token, byte[][]? args = null)
+            : base(token, (data) => (object?)FluidVM.Run(data, args))
             {
                 _token = token;
                 _isVmFlow = true;
                 Data = _token;
             }
 
-        // Constructeur legacy — opcode + funcs custom
+        // Legacy inchangé
         public RustInstruction(byte opcode, params FluidFunc<byte[], object>[] funcs)
             : base(null, funcs)
         {

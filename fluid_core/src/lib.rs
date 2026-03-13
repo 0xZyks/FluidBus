@@ -1,8 +1,10 @@
 mod core;
+mod generated;
 
 use core::bytecode::generate_bytecode;
 use core::ffi::{free_vec, vec_into_raw};
 use core::state;
+use generated::methods::SEED_BUILD;
 
 // --- FFI Exports ---
 
@@ -15,29 +17,52 @@ pub unsafe extern "C" fn init() -> u64 {
 pub unsafe extern "C" fn get_parsed_bytecode_by_token(
     token: *const u8,
     token_len: usize,
-    arg: *const u8,
-    arg_len: usize,
+    args_buf: *const u8,   // buffer sérialisé
+    args_buf_len: usize,
     out_len: *mut usize,
 ) -> *mut u8 {
     let token_slice = unsafe { std::slice::from_raw_parts(token, token_len) };
-    let arg_slice = unsafe { raw_to_slice(arg, arg_len) };
+    let args_raw = unsafe { raw_to_slice(args_buf, args_buf_len) };
 
-    match state::resolve_by_token(token_slice, arg_slice) {
-        Some(result) => unsafe { vec_into_raw(result, out_len) },
-        None => std::ptr::null_mut(),
+    let args_owned = deserialize_args(args_raw);
+
+    let args_refs: Vec<&[u8]> = args_owned.iter().map(|a| a.as_slice()).collect();
+
+    match state::resolve_by_token(token_slice, &args_refs) {
+        Some(result) => { unsafe { vec_into_raw(result, out_len) } },
+        None => { std::ptr::null_mut() },
     }
+}
+
+fn deserialize_args(buf: &[u8]) -> Vec<Vec<u8>> {
+    if buf.is_empty() { return vec![]; }
+    let mut args = Vec::new();
+    let mut i = 0;
+    let nb = buf[0] as usize;
+    i += 1;
+    for _ in 0..nb {
+        if i >= buf.len() { break; }
+        let len = buf[i] as usize;
+        i += 1;
+        if i + len > buf.len() { break; }
+        args.push(buf[i..i + len].to_vec());
+        i += len;
+    }
+    args
 }
 
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn get_parsed_bytecode(
     opcode: u8,
-    arg: *const u8,
-    arg_len: usize,
+    args_buf: *const u8,
+    args_buf_len: usize,
     out_len: *mut usize,
 ) -> *mut u8 {
-    let arg_slice = unsafe { raw_to_slice(arg, arg_len) };
+    let args_raw = unsafe { raw_to_slice(args_buf, args_buf_len) };
+    let args_owned = deserialize_args(args_raw);
+    let args_refs: Vec<&[u8]> = args_owned.iter().map(|a| a.as_slice()).collect();
 
-    match state::resolve_by_opcode(opcode, arg_slice) {
+    match state::resolve_by_opcode(opcode, &args_refs) {
         Some(result) => unsafe { vec_into_raw(result, out_len) },
         None => std::ptr::null_mut(),
     }
@@ -100,7 +125,6 @@ pub unsafe extern "C" fn get_bytecode(
     arg_len: usize,
     out_len: *mut usize,
 ) -> *mut u8 {
-    let seed = state::get_seed();
     let type_name = unsafe {
         std::str::from_utf8(std::slice::from_raw_parts(type_name, type_name_len)).unwrap()
     };
@@ -112,7 +136,7 @@ pub unsafe extern "C" fn get_bytecode(
     };
     let arg = unsafe { std::slice::from_raw_parts(arg, arg_len) };
 
-    let bytecode = generate_bytecode(seed, opcode, type_name, method_name, arg_type, arg);
+    let bytecode = generate_bytecode(SEED_BUILD, opcode, type_name, method_name, arg_type, &[arg]);
     unsafe { vec_into_raw(bytecode, out_len) }
 }
 
