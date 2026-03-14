@@ -17,13 +17,13 @@ namespace LoggerTestBusCSharpPython
 {
 	public class TestEvt : FluidEvent
 	{
-		public TestEvt(string id, BusProtocol protocol, params IFluidInstruction[] instrs) : base($"EVT::{nameof(TestEvt)}::{id}", protocol, instrs)
+		public TestEvt(string id, BusProtocol protocol, params IFluidInstruction[] instrs) : base($"{nameof(TestEvt)}::{id}", protocol, instrs)
 		{ }
 	}
 
 	public class TestHandler : FluidHandler<TestEvt>
 	{
-		public TestHandler(string id) : base($"HDL::{nameof(TestHandler)}::{id}")
+		public TestHandler(string id) : base($"{nameof(TestHandler)}::{id}")
 		{ }
 
 		public override bool Handle(IFluidEvent evt)
