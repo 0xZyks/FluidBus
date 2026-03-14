@@ -19,7 +19,7 @@ namespace FluidBus.Core.Herits
 
 		public FluidEvent(string id, BusProtocol protocol, params IFluidInstruction[] instructions)
 		{
-			Id = id;
+			Id = $"[EVT::{id}]";
 			Protocol = protocol;
 			Instructions = new(instructions);
 		}

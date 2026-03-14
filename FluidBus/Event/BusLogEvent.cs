@@ -9,7 +9,7 @@ namespace FluidBus.Event
 {
 	public class BusLogEvent : FluidEvent
 	{
-		public BusLogEvent(string id, BusProtocol protocol, params IFluidInstruction[] instrs) : base ($"[EVT::{nameof(BusLogEvent)}::{id}]", protocol, instrs)
+		public BusLogEvent(string id, BusProtocol protocol, params IFluidInstruction[] instrs) : base ($"{nameof(BusLogEvent)}::{id}", protocol, instrs)
 		{
 
 		}

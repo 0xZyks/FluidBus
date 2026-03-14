@@ -13,11 +13,20 @@ namespace FluidBus.Core.Herits
 
 		public FluidHandler(string id)
 		{
-			this.Id = id;
+			this.Id = $"[HDL::{id}]";
 			this.EventType = typeof(T);
 		}
 
 
-		public abstract bool Handle(IFluidEvent evt);
+		public virtual bool Handle(IFluidEvent evt)
+		{
+			foreach (var instr in evt.Instructions)
+			{
+				instr.Execute();
+				instr.ExecuteAndGet();
+			}
+			this.CallCount++;
+			return true;
+		}
 	}
 }
