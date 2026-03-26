@@ -41,6 +41,12 @@
             return result;
         }
 
+        public bool HasMethod
+        { get { return _methods is { Length: > 0 }; } }
+
+        public bool HasFuncs
+        { get { return _funcs is { Length: > 0 }; } }
+
         public override bool Equals(object? obj)
         {
             if (obj is FluidInstruction<T> other)

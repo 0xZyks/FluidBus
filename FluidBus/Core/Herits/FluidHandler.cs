@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FluidBus.Core.Herits
+﻿namespace FluidBus.Core.Herits
 {
 	public abstract class FluidHandler<T> : IFluidHandler
 	{
@@ -22,8 +18,10 @@ namespace FluidBus.Core.Herits
 		{
 			foreach (var instr in evt.Instructions)
 			{
-				instr.Execute();
-				instr.ExecuteAndGet();
+                if (instr.HasMethod)
+				    instr.Execute();
+                if (instr.HasFuncs)
+				    instr.ExecuteAndGet();
 			}
 			this.CallCount++;
 			return true;

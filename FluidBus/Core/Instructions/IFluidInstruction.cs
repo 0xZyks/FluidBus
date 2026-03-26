@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FluidBus.Core.Instructions
+﻿namespace FluidBus.Core.Instructions
 {
 	public interface IFluidInstruction
 	{
@@ -10,5 +6,7 @@ namespace FluidBus.Core.Instructions
 
 		void Execute();
 		object? ExecuteAndGet();
+        bool HasMethod { get; }
+        bool HasFuncs { get; }
 	}
 }

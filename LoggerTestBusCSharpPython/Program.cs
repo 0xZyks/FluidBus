@@ -1,17 +1,8 @@
-﻿using FluidBus;
-using FluidBus.BluePrint;
-using FluidBus.Core;
-//using FluidBus.Core.VM;
+﻿using FluidBus.Core;
 using FluidBus.Core.BusProtocols;
 using FluidBus.Core.Herits;
 using FluidBus.Core.Instructions;
 using FluidBus.Core.Instructions.System;
-using FluidBus.Errors;
-
-//using FluidBus.Core.Instructions.Core;
-using FluidBus.Event;
-using FluidBus.Handler;
-using System.Text;
 
 namespace LoggerTestBusCSharpPython
 {
@@ -53,14 +44,9 @@ namespace LoggerTestBusCSharpPython
 					Console.WriteLine(result);
 			};
 
-			var (evt, success) = BluePrintFactory.NewEvent(
-				typeof(TestEvt),
-				"test_evt",
-				BusProtocol.System,
-				instr);
+            var evt = new TestEvt("test_evt", BusProtocol.System, instr);
 
 			FBus.Publish(evt);
-			Console.WriteLine("Off");
         }
     }
 }

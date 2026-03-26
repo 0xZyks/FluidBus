@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FluidBus.Core.BusProtocols
+﻿namespace FluidBus.Core.BusProtocols
 {
 	public enum ExecutionStrategy
 	{
@@ -19,5 +15,11 @@ namespace FluidBus.Core.BusProtocols
 			=> this.Name = name;
 
 		public static readonly BusProtocol System = new SystemProtocol();
+
+        public override bool Equals(object? obj)
+            => obj is BusProtocol other && Name.Equals(other.Name, StringComparison.Ordinal);
+
+        public override int GetHashCode()
+            => Name.GetHashCode(StringComparison.Ordinal);
 	}
 }
