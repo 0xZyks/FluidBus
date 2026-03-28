@@ -1,5 +1,5 @@
-﻿using FluidBus.Core;
-using FluidBus.React;
+﻿using FluidBus.React.Abstracts;
+using FluidBus.React.Core;
 using FluidBus.Router.Abstracts;
 using FluidBus.Router.Core;
 

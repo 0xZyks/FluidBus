@@ -6,4 +6,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="FluidBus.Core\**" />
+    <Compile Remove="FluidBus.Router\**" />
+    <Compile Remove="FluidBus.React\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="FluidBus.Core\FluidBus.Core.csproj" />
+    <ProjectReference Include="FluidBus.Router\FluidBus.Router.csproj" />
+    <ProjectReference Include="FluidBus.React\FluidBus.React.csproj" />
+  </ItemGroup>
+
 </Project>

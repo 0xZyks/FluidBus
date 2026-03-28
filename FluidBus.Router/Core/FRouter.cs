@@ -2,6 +2,7 @@ using FluidBus.Core.Interfaces;
 using FluidBus.Core.Protocols;
 using FluidBus.Router.HLinq;
 using FluidBus.Router.Handlers;
+using FluidBus.Router.Abstracts;
 
 namespace FluidBus.Router.Core
 {
@@ -24,7 +25,7 @@ namespace FluidBus.Router.Core
 		public static bool TryGetHandlers(IFluidEvent evt, out List<IFluidHandler> handlers)
 			=> HandlerLinq.TryGetHandlers(evt, out handlers);
 
-		public static bool Publish(IFluidEvent evt)
+		public static bool Publish(RouteEvent evt)
 		{
             if (!_ports.TryGetValue(evt.Protocol, out var port))
                 return false;
