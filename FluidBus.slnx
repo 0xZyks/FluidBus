@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="FluidBus.Core/FluidBus.Core.csproj" />
+  <Project Path="FluidBus.csproj" />
+  <Project Path="FluidBus.React/FluidBus.React.csproj" />
+  <Project Path="FluidBus.Router/FluidBus.Router.csproj" />
+</Solution>
