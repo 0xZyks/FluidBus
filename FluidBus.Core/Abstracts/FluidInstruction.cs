@@ -17,32 +17,39 @@ namespace FluidBus.Core.Abstracts
         private List<FluidMethod<T>>? _methods;
         private List<FluidFunc<T, object>>? _funcs;
 
+        private HashSet<string> _methodsId;
+        private HashSet<string> _funcsId;
+
         protected FluidInstruction(T? data, params FluidMethod<T>[] methods)
         {
-            Data = data;
-            _methods = new();
+            int instrcount = 0;
+            this.Data = data;
+            this._methods = new();
+            this._methodsId = new();
             foreach (var meth in methods)
-                this.AddMethod(meth);
+                this.AddMethod((instrcount++).ToString(), meth);
         }
 
         protected FluidInstruction(T? data, params FluidFunc<T, object>[] funcs)
         {
-            Data = data;
-            _funcs = new();
+            int instrcount = 0;
+            this.Data = data;
+            this._funcs = new();
+            this._funcsId = new();
             foreach (var func in funcs)
-                this.AddFunc(func);
+                this.AddFunc((instrcount++).ToString(), func);
         }
 
-        public virtual void AddMethod(FluidMethod<T> method)
+        public virtual void AddMethod(string id, FluidMethod<T> method)
         {
-            if (this._methods != null && !this._methods.Contains(method))
-                this._methods.Add(method);
+            if (this._methods != null && !this._methodsId.Contains(id))
+            { this._methods.Add(method); this._methodsId.Add(id); }
         }
 
-        public virtual void AddFunc(FluidFunc<T, object> func)
+        public virtual void AddFunc(string id, FluidFunc<T, object> func)
         {
-            if (this._funcs != null && !this._funcs.Contains(func))
-                this._funcs.Add(func);
+            if (this._funcs != null && !this._funcsId.Contains(id))
+            { this._funcs.Add(func); this._funcsId.Add(id); }
         }
 
         public virtual void Execute()

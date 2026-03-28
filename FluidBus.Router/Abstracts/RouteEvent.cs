@@ -7,7 +7,7 @@ namespace FluidBus.Router.Abstracts
 	{
 		public string Id { get; }
 		public BusProtocol Protocol { get; }
-		public HashSet<IFluidInstruction> Instructions { get; }
+		public List<IFluidInstruction> Instructions { get; }
 
 		public RouteEvent(string id, BusProtocol protocol, params IFluidInstruction[] instructions)
 		{
