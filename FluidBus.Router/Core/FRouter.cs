@@ -23,16 +23,16 @@ namespace FluidBus.Router.Core
 		public static bool Register(IFluidHandler hdl)
 			=> HandlerLinq.Register(hdl);
 
-		public static bool TryGetHandlers(IFluidEvent evt, out List<IFluidHandler> handlers)
-			=> HandlerLinq.TryGetHandlers(evt, out handlers);
+		public static bool TryGetHandler(IFluidEvent evt, out IFluidHandler handler)
+			=> HandlerLinq.TryGetHandler(evt, out handler);
 
 		public static bool Publish(RouteEvent evt)
 		{
             if (!_ports.TryGetValue(evt.Protocol, out var port))
                 throw new ProtocolNotFoundException(evt.Protocol.Name);
-            if (!HandlerLinq.TryGetHandlers(evt, out var handlers))
+            if (!HandlerLinq.TryGetHandler(evt, out var handler))
                 throw new HandlerNotFoundException(evt.Id);
-            return port.Dispatch(evt, handlers.First());
+            return port.Dispatch(evt, handler);
 		}
 	}
 }

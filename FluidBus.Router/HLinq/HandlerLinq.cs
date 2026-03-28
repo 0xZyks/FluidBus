@@ -5,26 +5,24 @@ namespace FluidBus.Router.HLinq
 {
 	public static class HandlerLinq
 	{
-		private static Dictionary<Type, List<IFluidHandler>> handlers = new();
+		private static Dictionary<Type, IFluidHandler> handlers = new();
 
 		public static bool Register(IFluidHandler handler)
 		{
-            if (!handlers.TryGetValue(handler.EventType, out var list))
-            { list = new(); handlers[handler.EventType] = list; }
-            if (list.Any(h => h.Id == handler.Id))
+            if (handlers.ContainsKey(handler.EventType))
                 throw new DuplicateHandlerException(handler.Id);
-            list.Add(handler);
+            handlers[handler.EventType] = handler;
             return true;
 		}
 
 		public static bool Drop(IFluidHandler handler)
 		{
-            if (handlers.TryGetValue(handler.EventType, out var list))
-                return list.Remove(handler);
+            if (handlers.Remove(handler.EventType))
+                return true;
 			throw new HandlerNotFoundException(handler.Id);
 		}
 
-		public static bool TryGetHandlers(IFluidEvent evt, out List<IFluidHandler> hdls)
-            => handlers.TryGetValue(evt.GetType(), out hdls!);
+		public static bool TryGetHandler(IFluidEvent evt, out IFluidHandler hdl)
+            => handlers.TryGetValue(evt.GetType(), out hdl!);
 	}
 }
