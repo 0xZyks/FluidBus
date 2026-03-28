@@ -1,4 +1,5 @@
 using FluidBus.Core.Interfaces;
+using FluidBus.Core.Errors;
 
 namespace FluidBus.Core.Abstracts
 {
@@ -30,15 +31,27 @@ namespace FluidBus.Core.Abstracts
 
         public virtual void Execute()
         {
-            foreach (var method in _methods ?? [])
-                method?.Invoke(Data!);
+            if (_methods is null || _methods.Length == 0)
+                throw new InstructionException($"No methods to execute on instruction '{typeof(T).Name}'");
+            foreach (var method in _methods)
+            {
+                if (Data is null)
+                    throw new InstructionException($"Data is null on instruction '{typeof(T).Name}'");
+                method.Invoke(Data);
+            }
         }
 
         public virtual object? ExecuteAndGet()
         {
+            if (_funcs is null || _funcs.Length == 0)
+                throw new InstructionException($"No funcs to execute on instruction '{typeof(T).Name}'");
             object? result = null;
-            foreach (var func in _funcs ?? [])
-                result = func?.Invoke(Data!);
+            foreach (var func in _funcs)
+            {
+                if (Data is null)
+                    throw new InstructionException($"Data is null on instruction '{typeof(T).Name}'");
+                result = func.Invoke(Data);
+            }
             OnResult?.Invoke(result);
             return result;
         }

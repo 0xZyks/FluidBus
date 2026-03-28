@@ -1,5 +1,6 @@
 using FluidBus.Core.Interfaces;
 using FluidBus.Core.Protocols;
+using FluidBus.Core.Errors;
 using FluidBus.Router.HLinq;
 using FluidBus.Router.Handlers;
 using FluidBus.Router.Abstracts;
@@ -28,9 +29,9 @@ namespace FluidBus.Router.Core
 		public static bool Publish(RouteEvent evt)
 		{
             if (!_ports.TryGetValue(evt.Protocol, out var port))
-                return false;
+                throw new ProtocolNotFoundException(evt.Protocol.Name);
             if (!HandlerLinq.TryGetHandlers(evt, out var handlers))
-                return false;
+                throw new HandlerNotFoundException(evt.Id);
             return port.Dispatch(evt, handlers.First());
 		}
 	}

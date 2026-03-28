@@ -185,6 +185,24 @@ FBus.React(new ChatMessageEvent("msg_1", instruction));
 
 ---
 
+## Error handling
+
+All exceptions inherit from `FluidBusError` and provide explicit messages. No silent failures.
+
+| Exception | Thrown when |
+|---|---|
+| `DispatchException` | An async dispatch fails, or an unknown `ExecutionStrategy` is encountered on a protocol |
+| `ProtocolNotFoundException` | `FRouter.Publish()` is called with an event whose protocol has no registered port |
+| `HandlerNotFoundException` | No handler is registered for a given event type, or `HandlerLinq.Drop()` targets a handler that doesn't exist |
+| `DuplicateHandlerException` | `HandlerLinq.Register()` is called with a handler whose ID is already registered for that event type |
+| `InstructionException` | `Execute()` or `ExecuteAndGet()` is called on an instruction with no methods/funcs, or with null data |
+| `ChannelException` | A `ReactChannel.Write()` is called with no subscribers, or a subscriber callback fails during async dispatch |
+| `HandlerLinqException` | General error in the handler query layer |
+
+All exceptions expose `.DisplayMessage()` (inherited from `FluidBusError`) to print the error to the console.
+
+---
+
 ## License
 
 [Business Source License 1.1](LICENSE) - See LICENSE file for details.

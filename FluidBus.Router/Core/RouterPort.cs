@@ -23,11 +23,11 @@ namespace FluidBus.Router.Core
 						.OnComplete(state =>
 						{
 							if (state == FluidTaskState.Failed)
-								new DispatchException("Dispatch failed").DisplayMessage();
+								new DispatchException($"Async dispatch failed for event '{evt.Id}' on protocol '{Protocol.Name}'").DisplayMessage();
 						});
 					return true;
 				default:
-					return false;
+					throw new DispatchException($"Unknown execution strategy for protocol '{Protocol.Name}'");
 			}
 		}
 

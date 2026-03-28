@@ -12,7 +12,7 @@ public class FReact
             return channel;
         channel = new ReactChannel(listen.Name);
         _channels[listen] = channel;
-        return null!;
+        return channel;
     }
 
     public static bool Publish(ReactEvent evt)

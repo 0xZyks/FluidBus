@@ -1,5 +1,6 @@
 ﻿using FluidBus.Core.Interfaces;
 using FluidBus.Core.Tasks;
+using FluidBus.Core.Errors;
 using FluidBus.React.Abstracts;
 
 namespace FluidBus.React.Core;
@@ -21,5 +22,15 @@ public class ReactChannel
         => this._subscribers.Add(callback);
 
     public void Write(ReactEvent evt)
-        => this._subscribers.ForEach(callback => new FluidTask(() => callback(evt)));
+    {
+        if (this._subscribers.Count == 0)
+            throw new ChannelException(Name, "No subscribers on this channel");
+        this._subscribers.ForEach(callback =>
+            new FluidTask(() => callback(evt))
+                .OnComplete(state =>
+                {
+                    if (state == FluidTaskState.Failed)
+                        new ChannelException(Name, $"Callback failed for event '{evt.Id}'").DisplayMessage();
+                }));
+    }
 }
