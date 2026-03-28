@@ -1,6 +1,6 @@
 # Build results
+bin/
 obj/
-LoggerTestBusCSharpPython/
 
 # Visual Studio
 .vs/
@@ -30,7 +30,3 @@ Thumbs.db
 # Test results
 TestResults/
 coverage/
-
-# Rust
-target/
-Cargo.lock

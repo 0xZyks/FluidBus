@@ -1,7 +1,0 @@
-<Solution>
-  <Folder Name="/Éléments de solution/">
-    <File Path=".gitignore" />
-  </Folder>
-  <Project Path="FluidBus/FluidBus.csproj" />
-  <Project Path="LoggerTestBusCSharpPython/LoggerTestBusCSharpPython.csproj" />
-</Solution>

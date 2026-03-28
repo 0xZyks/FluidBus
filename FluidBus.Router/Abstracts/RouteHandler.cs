@@ -1,0 +1,32 @@
+using FluidBus.Core.Interfaces;
+
+namespace FluidBus.Router.Abstracts
+{
+	public abstract class RouteHandler<T> : IFluidHandler
+	{
+		public string Id { get; }
+		public int CallCount { get; set; }
+
+		public Type EventType { get; }
+
+		public RouteHandler(string id)
+		{
+			this.Id = $"[HDL::{id}]";
+			this.EventType = typeof(T);
+		}
+
+
+		public virtual bool Handle(IFluidEvent evt)
+		{
+			foreach (var instr in evt.Instructions)
+			{
+                if (instr.HasMethod)
+				    instr.Execute();
+                if (instr.HasFuncs)
+				    instr.ExecuteAndGet();
+			}
+			this.CallCount++;
+			return true;
+		}
+	}
+}
