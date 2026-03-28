@@ -24,6 +24,9 @@ artifacts/
 .DS_Store
 Thumbs.db
 
+# Sources
+SOURCES.md
+
 # Logs
 *.log
 
