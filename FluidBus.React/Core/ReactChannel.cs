@@ -1,7 +1,7 @@
 ﻿using FluidBus.Core.Interfaces;
 using FluidBus.Core.Tasks;
 using FluidBus.Core.Errors;
-using FluidBus.React.Abstracts;
+using FluidBus.React.Interfaces;
 
 namespace FluidBus.React.Core;
 
@@ -21,7 +21,7 @@ public class ReactChannel
     public void OnReceive(ReactReceive callback)
         => this._subscribers.Add(callback);
 
-    public void Write(ReactEvent evt)
+    public void Write(IReactEvent evt)
     {
         if (this._subscribers.Count == 0)
             throw new ChannelException(Name, "No subscribers on this channel");

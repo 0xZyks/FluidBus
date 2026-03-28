@@ -1,8 +1,9 @@
 using FluidBus.Core.Interfaces;
+using FluidBus.Router.Interfaces;
 
 namespace FluidBus.Router.Abstracts
 {
-	public abstract class RouteHandler<T> : IFluidHandler
+	public abstract class RouteHandler<T> : IRouteHandler
 	{
 		public string Id { get; }
 		public int CallCount { get; set; }

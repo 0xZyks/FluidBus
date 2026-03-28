@@ -3,6 +3,7 @@ using FluidBus.Core.Protocols;
 using FluidBus.Core.Tasks;
 using FluidBus.Core.Errors;
 using FluidBus.Router.Abstracts;
+using FluidBus.Router.Interfaces;
 
 namespace FluidBus.Router.Core
 {
@@ -12,7 +13,7 @@ namespace FluidBus.Router.Core
 		public RouterPort(BusProtocol protocol)
 			=> this.Protocol = protocol;
 
-		public bool Dispatch(RouteEvent evt, IFluidHandler hdl)
+		public bool Dispatch(IRouteEvent evt, IFluidHandler hdl)
 		{
 			switch (this.Protocol.Strategy)
 			{

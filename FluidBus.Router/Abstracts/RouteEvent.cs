@@ -1,9 +1,10 @@
 using FluidBus.Core.Interfaces;
 using FluidBus.Core.Protocols;
+using FluidBus.Router.Interfaces;
 
 namespace FluidBus.Router.Abstracts
 {
-	public abstract class RouteEvent : IFluidEvent
+	public abstract class RouteEvent : IRouteEvent
 	{
 		public string Id { get; }
 		public BusProtocol Protocol { get; }

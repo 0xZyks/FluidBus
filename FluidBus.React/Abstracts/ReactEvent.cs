@@ -1,8 +1,9 @@
 ﻿using FluidBus.Core.Interfaces;
+using FluidBus.React.Interfaces;
 
 namespace FluidBus.React.Abstracts;
 
-public abstract class ReactEvent : IFluidEvent
+public abstract class ReactEvent : IReactEvent
 {
     public string Id { get; }
     public List<IFluidInstruction> Instructions { get; }

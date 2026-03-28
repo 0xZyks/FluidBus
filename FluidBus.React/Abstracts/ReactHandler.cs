@@ -1,10 +1,10 @@
 ﻿using FluidBus.Core.Interfaces;
-using FluidBus.React.Abstracts;
 using FluidBus.React.Core;
+using FluidBus.React.Interfaces;
 
 namespace FluidBus.React.Abstracts;
 
-public abstract class ReactHandler<T> : IFluidHandler
+public abstract class ReactHandler<T> : IReactHandler
 {
     public int CallCount { get; set; }
     public string Id { get; }

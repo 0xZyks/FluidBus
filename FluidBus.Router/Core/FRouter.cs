@@ -1,9 +1,10 @@
 using FluidBus.Core.Interfaces;
 using FluidBus.Core.Protocols;
 using FluidBus.Core.Errors;
+using FluidBus.Router.Abstracts;
+using FluidBus.Router.Interfaces;
 using FluidBus.Router.HLinq;
 using FluidBus.Router.Handlers;
-using FluidBus.Router.Abstracts;
 
 namespace FluidBus.Router.Core
 {
@@ -20,13 +21,13 @@ namespace FluidBus.Router.Core
 		public static void AddPort(BusProtocol protocol)
 			=> _ports[protocol] = new RouterPort(protocol);
 
-		public static bool Register(IFluidHandler hdl)
+		public static bool Register(IRouteHandler hdl)
 			=> HandlerLinq.Register(hdl);
 
-		public static bool TryGetHandler(IFluidEvent evt, out IFluidHandler handler)
+		public static bool TryGetHandler(IRouteEvent evt, out IFluidHandler handler)
 			=> HandlerLinq.TryGetHandler(evt, out handler);
 
-		public static bool Publish(RouteEvent evt)
+		public static bool Publish(IRouteEvent evt)
 		{
             if (!_ports.TryGetValue(evt.Protocol, out var port))
                 throw new ProtocolNotFoundException(evt.Protocol.Name);
