@@ -1,4 +1,5 @@
-﻿using FluidBus.React.Interfaces;
+﻿using FluidBus.React.Handlers;
+using FluidBus.React.Interfaces;
 
 namespace FluidBus.React.Core;
 
@@ -7,6 +8,11 @@ public class FReact
     private static Dictionary<Type, ReactChannel> channels = new();
 
     private static List<IReactHandler> handlers = new();
+
+    static FReact()
+    {
+        RegisterHandler(new ReactLogHandler("react_logger"));
+    }
 
     public static bool RegisterHandler(IReactHandler hdl)
     {
@@ -32,5 +38,11 @@ public class FReact
     {
         GetOrCreateChannel(evt.GetType()).Write(evt);
         return true;
+    }
+
+    public static void Flush()
+    {
+        foreach (var channel in channels.Values)
+            channel.Flush();
     }
 }

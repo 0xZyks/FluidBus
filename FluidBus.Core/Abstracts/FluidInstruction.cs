@@ -26,6 +26,7 @@ namespace FluidBus.Core.Abstracts
             this.Data = data;
             this._methods = new();
             this._methodsId = new();
+            this._funcsId = new();
             foreach (var meth in methods)
                 this.AddMethod((instrcount++).ToString(), meth);
         }
@@ -36,6 +37,7 @@ namespace FluidBus.Core.Abstracts
             this.Data = data;
             this._funcs = new();
             this._funcsId = new();
+            this._methodsId = new();
             foreach (var func in funcs)
                 this.AddFunc((instrcount++).ToString(), func);
         }

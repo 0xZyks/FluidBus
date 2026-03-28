@@ -13,9 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="FluidBus.Core\FluidBus.Core.csproj" />
-    <ProjectReference Include="FluidBus.Router\FluidBus.Router.csproj" />
-    <ProjectReference Include="FluidBus.React\FluidBus.React.csproj" />
+    <ProjectReference Include="FluidBus.Core\FluidBus.Core.csproj" PrivateAssets="none" />
+    <ProjectReference Include="FluidBus.Router\FluidBus.Router.csproj" PrivateAssets="none" />
+    <ProjectReference Include="FluidBus.React\FluidBus.React.csproj" PrivateAssets="none" />
   </ItemGroup>
 
 </Project>

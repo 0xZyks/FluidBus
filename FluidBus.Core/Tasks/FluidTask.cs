@@ -17,9 +17,12 @@ namespace FluidBus.Core.Tasks
 			 : _task.IsCompleted ? FluidTaskState.Completed
 			 : FluidTaskState.Running;
 
+		public void Wait()
+			=> _task.Wait();
+
 		public FluidTask OnComplete(Action<FluidTaskState> callback)
 		{
-			_task.ContinueWith(t => callback(GetState()));
+			_task = _task.ContinueWith(t => callback(GetState()));
 			return this;
 		}
 	}

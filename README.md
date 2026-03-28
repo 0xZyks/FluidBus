@@ -48,7 +48,11 @@ public class PrintInstruction : FluidInstruction<string>
 
 ### 2. Create a custom event
 
-Events carry a protocol and a set of instructions. Inherit from `RouteEvent`:
+Events carry a protocol and a set of instructions. They implement `IRouteEvent`, which extends `IFluidEvent` with:
+- `Protocol` — the `BusProtocol` used for dispatch (sync/async)
+- `Dispatch(IFluidHandler)` — executes the event's instructions through the given handler
+
+Inherit from `RouteEvent`:
 
 ```csharp
 using FluidBus.Core.Interfaces;
@@ -158,11 +162,26 @@ public class ChatMessageHandler : ReactHandler<ChatMessageEvent>
 }
 ```
 
-### 3. Instantiate and publish
+### 3. Register and manage handlers
+
+```csharp
+using FluidBus.React.Core;
+
+var handler = new ChatMessageHandler("chat_listener");
+
+// Register a handler
+FReact.RegisterHandler(handler);
+
+// Remove a handler
+FReact.DropHandler(handler);
+```
+
+### 4. Publish
 
 ```csharp
 using FluidBus;
 using FluidBus.Core.Abstracts;
+using FluidBus.React.Core;
 
 // Instantiating the handler auto-subscribes it to the ChatMessageEvent channel
 var handler = new ChatMessageHandler("chat_listener");
@@ -170,6 +189,22 @@ var handler = new ChatMessageHandler("chat_listener");
 // Publish - all subscribed handlers are notified asynchronously
 var instruction = new PrintInstruction("New message!", msg => Console.WriteLine(msg));
 FBus.React(new ChatMessageEvent("msg_1", instruction));
+
+// Wait for all pending react tasks to complete before exiting
+FReact.Flush();
+```
+
+### Flush
+
+React events are dispatched in parallel (fire-and-forget). Call `FReact.Flush()` to wait for all pending tasks to complete. Typically placed at the end of your `Main`:
+
+```csharp
+FBus.React(event1);
+FBus.React(event2);
+FBus.React(event3);
+
+// All three events run in parallel — Flush blocks until every task is done
+FReact.Flush();
 ```
 
 ---

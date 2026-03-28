@@ -10,27 +10,38 @@ public delegate void ReactReceive(IFluidEvent evt);
 public class ReactChannel
 {
     private List<ReactReceive> _subscribers;
+    private List<FluidTask> _pending;
     public string Name { get; }
 
     public ReactChannel(string name)
     {
         this._subscribers = new();
+        this._pending = new();
         this.Name = name;
     }
 
     public void OnReceive(ReactReceive callback)
         => this._subscribers.Add(callback);
 
+    public void Flush()
+    {
+        _pending.ForEach(t => t.Wait());
+        _pending.Clear();
+    }
+
     public void Write(IReactEvent evt)
     {
         if (this._subscribers.Count == 0)
             throw new ChannelException(Name, "No subscribers on this channel");
         this._subscribers.ForEach(callback =>
-            new FluidTask(() => callback(evt))
+        {
+            var task = new FluidTask(() => callback(evt))
                 .OnComplete(state =>
                 {
                     if (state == FluidTaskState.Failed)
                         new ChannelException(Name, $"Callback failed for event '{evt.Id}'").DisplayMessage();
-                }));
+                });
+            _pending.Add(task);
+        });
     }
 }

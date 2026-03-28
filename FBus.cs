@@ -7,9 +7,9 @@ namespace FluidBus;
 
 public class FBus
 {
-    public static bool Route<T>(T evt) where T : IRouteEvent
+    public static bool Route(IRouteEvent evt)
         => FRouter.Publish(evt);
 
-    public static bool React<T>(T evt) where T : IReactEvent
+    public static bool React(IReactEvent evt)
         => FReact.Publish(evt);
 }
