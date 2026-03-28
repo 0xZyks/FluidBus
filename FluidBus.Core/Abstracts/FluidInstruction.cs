@@ -14,24 +14,40 @@ namespace FluidBus.Core.Abstracts
 
         public event FluidResult? OnResult;
 
-        private FluidMethod<T>[]? _methods;
-        private FluidFunc<T, object>[]? _funcs;
+        private List<FluidMethod<T>>? _methods;
+        private List<FluidFunc<T, object>>? _funcs;
 
         protected FluidInstruction(T? data, params FluidMethod<T>[] methods)
         {
             Data = data;
-            _methods = methods;
+            _methods = new();
+            foreach (var meth in methods)
+                this.AddMethod(meth);
         }
 
         protected FluidInstruction(T? data, params FluidFunc<T, object>[] funcs)
         {
             Data = data;
-            _funcs = funcs;
+            _funcs = new();
+            foreach (var func in funcs)
+                this.AddFunc(func);
+        }
+
+        public virtual void AddMethod(FluidMethod<T> method)
+        {
+            if (this._methods != null && !this._methods.Contains(method))
+                this._methods.Add(method);
+        }
+
+        public virtual void AddFunc(FluidFunc<T, object> func)
+        {
+            if (this._funcs != null && !this._funcs.Contains(func))
+                this._funcs.Add(func);
         }
 
         public virtual void Execute()
         {
-            if (_methods is null || _methods.Length == 0)
+            if (_methods is null || _methods.Count == 0)
                 throw new InstructionException($"No methods to execute on instruction '{typeof(T).Name}'");
             foreach (var method in _methods)
             {
@@ -43,7 +59,7 @@ namespace FluidBus.Core.Abstracts
 
         public virtual object? ExecuteAndGet()
         {
-            if (_funcs is null || _funcs.Length == 0)
+            if (_funcs is null || _funcs.Count == 0)
                 throw new InstructionException($"No funcs to execute on instruction '{typeof(T).Name}'");
             object? result = null;
             foreach (var func in _funcs)
@@ -57,10 +73,10 @@ namespace FluidBus.Core.Abstracts
         }
 
         public bool HasMethod
-        { get { return _methods is { Length: > 0 }; } }
+        { get { return _methods is { Count: > 0 }; } }
 
         public bool HasFuncs
-        { get { return _funcs is { Length: > 0 }; } }
+        { get { return _funcs is { Count: > 0 }; } }
 
         public override bool Equals(object? obj)
         {
