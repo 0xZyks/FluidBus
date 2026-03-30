@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="FluidBus.Benchmark/FluidBus.Benchmark.csproj" />
   <Project Path="FluidBus.Core/FluidBus.Core.csproj" />
   <Project Path="FluidBus.csproj" />
   <Project Path="FluidBus.React/FluidBus.React.csproj" />

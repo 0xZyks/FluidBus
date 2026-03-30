@@ -1,4 +1,5 @@
 ﻿using FluidBus.Core.Interfaces;
+using FluidBus.React.Core;
 using FluidBus.React.Interfaces;
 
 namespace FluidBus.React.Abstracts;
@@ -12,5 +13,6 @@ public abstract class ReactEvent : IReactEvent
     {
         this.Id = id;
         this.Instructions = new(instrs);
+		FReact.GetOrCreateChannel(this.GetType());
     }
 }

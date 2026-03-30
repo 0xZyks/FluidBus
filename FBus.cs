@@ -2,6 +2,7 @@
 using FluidBus.React.Core;
 using FluidBus.Router.Interfaces;
 using FluidBus.Router.Core;
+using FluidBus.Benchmark.Core;
 
 namespace FluidBus;
 
@@ -12,4 +13,7 @@ public class FBus
 
     public static bool React(IReactEvent evt)
         => FReact.Publish(evt);
+
+	public static BenchResult Bench(string useCase, int iteration, int warmup, BenchScenario scenario)
+		=> FBench.Measure(useCase, iteration, warmup, scenario);
 }

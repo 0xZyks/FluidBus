@@ -1,4 +1,5 @@
-﻿using FluidBus.React.Handlers;
+﻿using System.Diagnostics;
+using FluidBus.React.Handlers;
 using FluidBus.React.Interfaces;
 
 namespace FluidBus.React.Core;
@@ -11,7 +12,7 @@ public class FReact
 
     static FReact()
     {
-        RegisterHandler(new ReactLogHandler("react_logger"));
+		new ReactLogHandler("react_logger");
     }
 
     public static bool RegisterHandler(IReactHandler hdl)
@@ -23,7 +24,12 @@ public class FReact
     }
 
     public static bool DropHandler(IReactHandler hdl)
-        => handlers.Remove(hdl);
+	{
+		if (!channels.TryGetValue(hdl.EventType, out var channel))
+			return false;
+		channels[hdl.EventType] = null;
+		return true;
+	}
 
     public static ReactChannel GetOrCreateChannel(Type listen)
     {
@@ -36,13 +42,8 @@ public class FReact
 
     public static bool Publish(IReactEvent evt)
     {
-        GetOrCreateChannel(evt.GetType()).Write(evt);
+		var channel = GetOrCreateChannel(evt.GetType());
+		channel.Write(evt);
         return true;
-    }
-
-    public static void Flush()
-    {
-        foreach (var channel in channels.Values)
-            channel.Flush();
     }
 }

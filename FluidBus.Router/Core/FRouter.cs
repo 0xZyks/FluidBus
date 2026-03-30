@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using FluidBus.Core.Interfaces;
 using FluidBus.Core.Protocols;
 using FluidBus.Core.Errors;
@@ -33,7 +34,8 @@ namespace FluidBus.Router.Core
                 throw new ProtocolNotFoundException(evt.Protocol.Name);
             if (!HandlerLinq.TryGetHandler(evt, out var handler))
                 throw new HandlerNotFoundException(evt.Id);
-            return port.Dispatch(evt, handler);
+            var result = port.Dispatch(evt, handler);
+            return result;
 		}
 	}
 }

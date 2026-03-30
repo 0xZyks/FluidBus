@@ -10,12 +10,15 @@
     <Compile Remove="FluidBus.Core\**" />
     <Compile Remove="FluidBus.Router\**" />
     <Compile Remove="FluidBus.React\**" />
+	<Compile Remove="FluidBus.Benchmark\**" />
+
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="FluidBus.Core\FluidBus.Core.csproj" PrivateAssets="none" />
     <ProjectReference Include="FluidBus.Router\FluidBus.Router.csproj" PrivateAssets="none" />
     <ProjectReference Include="FluidBus.React\FluidBus.React.csproj" PrivateAssets="none" />
+    <ProjectReference Include="FluidBus.Benchmark\FluidBus.Benchmark.csproj" PrivateAssets="none" />
   </ItemGroup>
 
 </Project>
