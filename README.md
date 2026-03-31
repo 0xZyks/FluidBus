@@ -1,58 +1,117 @@
 # FluidBus
 
-A lightweight, modular event bus for .NET built around two dispatch models: **Router** (protocol-based routing with sync/async support) and **React** (channel-based reactive subscriptions).
+A lightweight, modular event bus for .NET 10 built around two dispatch models: **Router** (protocol-based routing with sync/async support) and **React** (channel-based reactive subscriptions), plus a **CallBack** registry and a built-in **Benchmark** toolkit.
+
+Zero external dependencies.
 
 ## Architecture
 
 ```
 FluidBus
-├── FluidBus.Core      # Interfaces, protocols, tasks, errors
-├── FluidBus.Router     # Protocol-based event routing (sync/async)
-├── FluidBus.React      # Reactive channel-based event dispatch
-└── FBus                # Unified facade
+├── FluidBus.Core        # Interfaces, protocols, tasks, errors
+├── FluidBus.Router      # Protocol-based event routing (sync/async)
+├── FluidBus.React       # Reactive channel-based event dispatch
+├── FluidBus.CallBack    # Named callback registry
+├── FluidBus.Benchmark   # Benchmarking utilities
+└── FBus                 # Unified facade
 ```
+
+### Router vs React
+
+| | Router | React |
+|---|---|---|
+| Dispatch | Protocol-based (sync/async) | Channel-based (always async) |
+| Handler count | One handler per event type | Multiple subscribers per channel |
+| Registration | Manual via `FRouter.Register()` | Auto-subscribe on instantiation |
+| Matching | Exact event type | All subscribers on the channel |
+| Use case | Command / request patterns | Broadcast / observer patterns |
 
 ## Getting started
 
-Reference `FluidBus` in your project. The `FBus` facade gives you access to both models:
+Reference `FluidBus` in your project. The `FBus` facade exposes all modules:
 
 ```csharp
 using FluidBus;
 
-// Route an event through a protocol
-FBus.Route(myRouteEvent);
-
-// React to an event through channels
-FBus.React(myReactEvent);
+FBus.Route(routeEvent);                           // Router dispatch
+FBus.React(reactEvent);                           // React dispatch
+FBus.CallBack("on_complete", someData);            // Execute a named callback
+FBus.Bench("my scenario", 1000, 100, () => { }); // Benchmark a scenario
 ```
 
 ---
 
-## FluidBus.Router
+## FluidBus.Core
 
-The Router dispatches events through **protocols** (sync or async) to registered **handlers**, matched by event type.
+Shared foundation used by all modules.
 
-### 1. Create a custom instruction
+### Instructions
 
-Instructions carry the logic that handlers execute. Inherit from `FluidInstruction<T>`:
+Instructions carry the data and logic that handlers execute. They use the `FluidCallBack` delegate:
+
+```csharp
+public delegate object? FluidCallBack(object? data);
+```
+
+Inherit from `FluidInstruction<T>`:
 
 ```csharp
 using FluidBus.Core.Abstracts;
 
 public class PrintInstruction : FluidInstruction<string>
 {
-    public PrintInstruction(string? data, params FluidMethod<string>[] methods)
+    public PrintInstruction(string? data, params FluidCallBack[] methods)
         : base(data, methods) { }
 }
 ```
 
-### 2. Create a custom event
+Each instruction can hold multiple callbacks (deduplicated by ID), executed sequentially. An `OnResult` event fires after execution.
 
-Events carry a protocol and a set of instructions. They implement `IRouteEvent`, which extends `IFluidEvent` with:
-- `Protocol` — the `BusProtocol` used for dispatch (sync/async)
-- `Dispatch(IFluidHandler)` — executes the event's instructions through the given handler
+### Protocols
 
-Inherit from `RouteEvent`:
+Protocols define the execution strategy for the Router:
+
+```csharp
+public enum ExecutionStrategy { Sync = 0, Async = 1 }
+```
+
+A built-in `BusProtocol.System` (sync) is always available. Create custom protocols:
+
+```csharp
+using FluidBus.Core.Protocols;
+
+public class AsyncProtocol : BusProtocol
+{
+    public override ExecutionStrategy Strategy => ExecutionStrategy.Async;
+    public AsyncProtocol() : base("ASYNC") { }
+}
+```
+
+### Tasks
+
+`FluidTask` wraps `Task.Run()` with state tracking (`Running`, `Completed`, `Failed`, `Cancelled`) and a fluent `OnComplete()` continuation API.
+
+### Error hierarchy
+
+All exceptions inherit from `FluidBusError` and expose `.DisplayMessage()`.
+
+| Exception | Thrown when |
+|---|---|
+| `DispatchException` | Async dispatch fails or unknown `ExecutionStrategy` |
+| `ProtocolNotFoundException` | Event protocol has no registered port |
+| `HandlerNotFoundException` | No handler registered for a given event type |
+| `DuplicateHandlerException` | Handler already registered for that event type |
+| `InstructionException` | `Execute()` called with no callbacks or null data |
+| `ChannelException` | Channel write with no subscribers, or subscriber failure |
+| `HandlerLinqException` | Handler registry error |
+
+---
+
+## FluidBus.Router
+
+The Router dispatches events through **protocols** to registered **handlers**, matched by event type. One handler per event type.
+
+### 1. Create a custom event
 
 ```csharp
 using FluidBus.Core.Interfaces;
@@ -66,11 +125,10 @@ public class UserCreatedEvent : RouteEvent
 }
 ```
 
-### 3. Create a custom handler
-
-Handlers react to a specific event type. Inherit from `RouteHandler<T>`:
+### 2. Create a custom handler
 
 ```csharp
+using FluidBus.Core.Interfaces;
 using FluidBus.Router.Abstracts;
 
 public class UserCreatedHandler : RouteHandler<UserCreatedEvent>
@@ -78,7 +136,6 @@ public class UserCreatedHandler : RouteHandler<UserCreatedEvent>
     public UserCreatedHandler(string id)
         : base($"{nameof(UserCreatedEvent)}::{id}") { }
 
-    // Override Handle to add custom logic
     public override bool Handle(IFluidEvent evt)
     {
         Console.WriteLine($"[{Id}] Handling event {evt.Id}");
@@ -87,7 +144,7 @@ public class UserCreatedHandler : RouteHandler<UserCreatedEvent>
 }
 ```
 
-### 4. Register and publish
+### 3. Register and publish
 
 ```csharp
 using FluidBus;
@@ -98,35 +155,46 @@ using FluidBus.Router.Core;
 // Register the handler
 FRouter.Register(new UserCreatedHandler("user_handler"));
 
-// Create an instruction with a method to execute
-var instruction = new PrintInstruction("Hello from FluidBus!", msg => Console.WriteLine(msg));
+// Create an instruction with a callback
+var instruction = new PrintInstruction("Hello from FluidBus!", msg =>
+{
+    Console.WriteLine(msg);
+    return null;
+});
 
-// Publish the event on the System protocol (sync)
+// Publish on the System protocol (sync)
 FBus.Route(new UserCreatedEvent("evt_1", BusProtocol.System, instruction));
 ```
 
 ### Custom protocols
 
-You can define your own protocols with sync or async execution:
-
 ```csharp
-using FluidBus.Core.Protocols;
-
-public class AsyncProtocol : BusProtocol
-{
-    public override ExecutionStrategy Strategy => ExecutionStrategy.Async;
-    public AsyncProtocol() : base("ASYNC") { }
-}
-
-// Register the port for the protocol
+// Register a port for your protocol
 FRouter.AddPort(new AsyncProtocol());
+
+// Events using this protocol will dispatch asynchronously
+FBus.Route(new UserCreatedEvent("evt_2", new AsyncProtocol(), instruction));
+```
+
+### Dispatch flow
+
+```
+FBus.Route(event)
+  -> FRouter.Publish(event)
+    -> Lookup port by event.Protocol
+    -> Lookup handler by event type (HandlerLinq)
+    -> RouterPort.Dispatch(event, handler)
+       ├─ Sync:  event.Dispatch(handler) — blocking
+       └─ Async: FluidTask wrapping event.Dispatch(handler)
+         -> handler.Handle(event)
+           -> Execute each instruction's callbacks sequentially
 ```
 
 ---
 
 ## FluidBus.React
 
-React uses **channels** instead of protocols. Handlers auto-subscribe to their event type's channel on creation. Events are dispatched asynchronously to all subscribers.
+React uses **channels** (`System.Threading.Channels`) instead of protocols. Handlers auto-subscribe to their event type's channel on creation. Events are dispatched asynchronously to all subscribers.
 
 ### 1. Create a custom event
 
@@ -162,21 +230,7 @@ public class ChatMessageHandler : ReactHandler<ChatMessageEvent>
 }
 ```
 
-### 3. Register and manage handlers
-
-```csharp
-using FluidBus.React.Core;
-
-var handler = new ChatMessageHandler("chat_listener");
-
-// Register a handler
-FReact.RegisterHandler(handler);
-
-// Remove a handler
-FReact.DropHandler(handler);
-```
-
-### 4. Publish
+### 3. Register and publish
 
 ```csharp
 using FluidBus;
@@ -186,55 +240,79 @@ using FluidBus.React.Core;
 // Instantiating the handler auto-subscribes it to the ChatMessageEvent channel
 var handler = new ChatMessageHandler("chat_listener");
 
-// Publish - all subscribed handlers are notified asynchronously
-var instruction = new PrintInstruction("New message!", msg => Console.WriteLine(msg));
+// Optionally register it for lifecycle management
+FReact.RegisterHandler(handler);
+
+// Publish — all subscribed handlers are notified asynchronously
+var instruction = new PrintInstruction("New message!", msg =>
+{
+    Console.WriteLine(msg);
+    return null;
+});
 FBus.React(new ChatMessageEvent("msg_1", instruction));
 
-// Wait for all pending react tasks to complete before exiting
-FReact.Flush();
+// Drop a handler
+FReact.DropHandler(handler);
 ```
 
-### Flush
+### Dispatch flow
 
-React events are dispatched in parallel (fire-and-forget). Call `FReact.Flush()` to wait for all pending tasks to complete. Typically placed at the end of your `Main`:
+```
+FBus.React(event)
+  -> FReact.Publish(event)
+    -> GetOrCreateChannel(event type)
+    -> channel.Write(event) — enqueued in unbounded Channel<T>
+    -> Background reader loop (per channel)
+       -> Broadcast to all ReactReceive subscribers
+         -> handler.Handle(event)
+           -> Execute each instruction's callbacks
+```
+
+---
+
+## FluidBus.CallBack
+
+A simple named callback registry using the `FluidCallBack` delegate.
 
 ```csharp
-FBus.React(event1);
-FBus.React(event2);
-FBus.React(event3);
+using FluidBus.Core.Abstracts;
+using FluidBus.CallBack.Core;
 
-// All three events run in parallel — Flush blocks until every task is done
-FReact.Flush();
+// Register a callback
+FCallBack.RegisterCallBack("on_complete", data =>
+{
+    Console.WriteLine($"Completed with: {data}");
+    return data;
+});
+
+// Execute by name (through the facade)
+FBus.CallBack("on_complete", "some result");
+
+// Remove a callback
+FCallBack.DropCallBack("on_complete");
 ```
 
----
-
-## Router vs React
-
-| | Router | React |
-|---|---|---|
-| Dispatch | Protocol-based (sync/async) | Channel-based (always async) |
-| Handler registration | Manual via `FRouter.Register()` | Auto-subscribe on instantiation |
-| Matching | First matching handler | All subscribers on the channel |
-| Use case | Command/request patterns | Broadcast/observer patterns |
+Returns `null` silently if the callback doesn't exist.
 
 ---
 
-## Error handling
+## FluidBus.Benchmark
 
-All exceptions inherit from `FluidBusError` and provide explicit messages. No silent failures.
+Built-in benchmarking with warmup support and nanosecond precision (`Stopwatch.GetTimestamp()`).
 
-| Exception | Thrown when |
-|---|---|
-| `DispatchException` | An async dispatch fails, or an unknown `ExecutionStrategy` is encountered on a protocol |
-| `ProtocolNotFoundException` | `FRouter.Publish()` is called with an event whose protocol has no registered port |
-| `HandlerNotFoundException` | No handler is registered for a given event type, or `HandlerLinq.Drop()` targets a handler that doesn't exist |
-| `DuplicateHandlerException` | `HandlerLinq.Register()` is called with a handler whose ID is already registered for that event type |
-| `InstructionException` | `Execute()` or `ExecuteAndGet()` is called on an instruction with no methods/funcs, or with null data |
-| `ChannelException` | A `ReactChannel.Write()` is called with no subscribers, or a subscriber callback fails during async dispatch |
-| `HandlerLinqException` | General error in the handler query layer |
+```csharp
+using FluidBus;
+using FluidBus.Benchmark.Core;
 
-All exceptions expose `.DisplayMessage()` (inherited from `FluidBusError`) to print the error to the console.
+BenchResult result = FBus.Bench("route 1000 events", iterations: 1000, warmup: 100, () =>
+{
+    FBus.Route(myEvent);
+});
+
+result.Print(); // Prints iterations, duration (ms), avg ns/iteration
+```
+
+`BenchResult` exposes: `Iteration`, `Warmup`, `Case`, `Start`, `End`, `Duration` (ms).
 
 ---
 
