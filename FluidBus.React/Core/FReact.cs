@@ -27,7 +27,7 @@ public class FReact
 	{
 		if (!channels.TryGetValue(hdl.EventType, out var channel))
 			return false;
-		channels[hdl.EventType] = null;
+		channels[hdl.EventType] = null!;
 		return true;
 	}
 

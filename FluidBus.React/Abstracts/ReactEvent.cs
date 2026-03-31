@@ -13,6 +13,5 @@ public abstract class ReactEvent : IReactEvent
     {
         this.Id = id;
         this.Instructions = new(instrs);
-		FReact.GetOrCreateChannel(this.GetType());
     }
 }

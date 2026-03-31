@@ -4,9 +4,7 @@ namespace FluidBus.Core.Interfaces
 	{
 		Type DataType { get; }
 
-		void Execute();
-		object? ExecuteAndGet();
+		object? Execute();
         bool HasMethod { get; }
-        bool HasFuncs { get; }
 	}
 }

@@ -26,12 +26,8 @@ public abstract class ReactHandler<T> : IReactHandler
     public virtual bool Handle(IFluidEvent evt)
     {
         foreach (var instr in evt.Instructions)
-        {
             if (instr.HasMethod)
                 instr.Execute();
-            if (instr.HasFuncs)
-                instr.ExecuteAndGet();
-        }
         this.CallCount++;
         return true;
     }

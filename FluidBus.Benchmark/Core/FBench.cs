@@ -14,6 +14,9 @@ namespace FluidBus.Benchmark.Core
 			for (int i = 0; i < warmup; i++)
 				callback();
 
+			Console.WriteLine($"{'-' * 40}");
+			Console.WriteLine($"Warmup End");
+			Console.WriteLine($"{'-' * 40}");
 			DateTime start = DateTime.Now;
 			long startTick = Stopwatch.GetTimestamp();
 
