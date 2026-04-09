@@ -1,37 +1,22 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>FluidBus</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.2</Version>
     <Authors>0xZyks</Authors>
     <Description>A dual-model event-driven bus for .NET</Description>
-    <PackageLicenseExpression>BUSL-1.1</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/0xZyks/FluidBus</RepositoryUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="FluidBus.Core\**" />
-    <Compile Remove="FluidBus.Router\**" />
-    <Compile Remove="FluidBus.React\**" />
-	<Compile Remove="FluidBus.Benchmark\**" />
-	<Compile Remove="FluidBus.CallBack\**" />
-
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="FluidBus.Core\FluidBus.Core.csproj" PrivateAssets="none" />
-    <ProjectReference Include="FluidBus.Router\FluidBus.Router.csproj" PrivateAssets="none" />
-    <ProjectReference Include="FluidBus.React\FluidBus.React.csproj" PrivateAssets="none" />
-    <ProjectReference Include="FluidBus.Benchmark\FluidBus.Benchmark.csproj" PrivateAssets="none" />
-    <ProjectReference Include="FluidBus.CallBack\FluidBus.CallBack.csproj" PrivateAssets="none" />
+    <None Include="LICENSE" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
